@@ -36,7 +36,7 @@ public class Group extends ControlGroup< Group > {
 		theControlP5.register( theControlP5.papplet , theName , this );
 	}
 
-	public Group( ControlP5 theControlP5 , ControllerGroup< ? > theParent , String theName , int theX , int theY , int theW , int theH ) {
+	public Group( ControlP5 theControlP5 , ControllerGroup< ? > theParent , String theName , float theX , float theY , int theW , int theH ) {
 		super( theControlP5 , theParent , theName , theX , theY , theW , theH );
 	}
 

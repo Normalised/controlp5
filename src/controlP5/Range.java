@@ -90,13 +90,14 @@ public class Range extends Controller< Range > {
 	 * @param theName String
 	 * @param theMin float
 	 * @param theMax float
-	 * @param theDefaultValue float
-	 * @param theX int
-	 * @param theY int
+	 * @param theDefaultMinValue float
+	 * @param theDefaultMaxValue float
+	 * @param theX float
+	 * @param theY float
 	 * @param theWidth int
 	 * @param theHeight int
 	 */
-	@ControlP5.Invisible public Range( ControlP5 theControlP5 , ControllerGroup< ? > theParent , String theName , float theMin , float theMax , float theDefaultMinValue , float theDefaultMaxValue , int theX , int theY , int theWidth , int theHeight ) {
+	@ControlP5.Invisible public Range( ControlP5 theControlP5 , ControllerGroup< ? > theParent , String theName , float theMin , float theMax , float theDefaultMinValue , float theDefaultMaxValue , float theX , float theY , int theWidth , int theHeight ) {
 		super( theControlP5 , theParent , theName , theX , theY , theWidth , theHeight );
 
 		_myArrayValue = new float[] { theDefaultMinValue , theDefaultMaxValue };
@@ -181,8 +182,8 @@ public class Range extends Controller< Range > {
 
 	@Override @Invisible public void mousePressed( ) {
 
-		final float posX = x( _myParent.getAbsolutePosition( ) ) + x( position );
-		final float posY = y( _myParent.getAbsolutePosition( ) ) + y( position );
+		final float posX = _myParent.getAbsolutePosition( ).x + position.x;
+		final float posY = _myParent.getAbsolutePosition().y + position.y;
 
 		if ( _myControlWindow.mouseY < posY || _myControlWindow.mouseY > posY + getHeight( ) ) {
 			mode = -1;
@@ -418,7 +419,7 @@ public class Range extends Controller< Range > {
 
 			int high = mode;
 
-			final float posX = x( _myParent.getAbsolutePosition( ) ) + x( position );
+			final float posX = _myParent.getAbsolutePosition( ).x + position.x;
 			int x0 = ( int ) ( posX + minHandle );
 			int x1 = ( int ) ( posX + maxHandle );
 

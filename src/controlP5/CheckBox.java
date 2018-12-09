@@ -69,7 +69,7 @@ public class CheckBox extends ControlGroup< CheckBox > {
 	 * @param theX
 	 * @param theY
 	 */
-	public CheckBox( final ControlP5 theControlP5 , final ControllerGroup< ? > theParent , final String theName , final int theX , final int theY ) {
+	public CheckBox( final ControlP5 theControlP5 , final ControllerGroup< ? > theParent , final String theName , final float theX , final float theY ) {
 		super( theControlP5 , theParent , theName , theX , theY , 99 , 9 );
 		isBarVisible = false;
 		isCollapse = false;
@@ -422,7 +422,7 @@ public class CheckBox extends ControlGroup< CheckBox > {
 		int n = _myRadioToggles.size( );
 		for ( int i = 0 ; i < n ; i++ ) {
 			Toggle t = _myRadioToggles.get( i );
-			set( t.position , xx , yy );
+			t.positionBuffer.setLocation(xx,yy);
 
 			xx += t.getWidth( ) + spacingColumn;
 			nn++;

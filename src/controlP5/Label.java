@@ -150,13 +150,13 @@ public class Label implements CDrawable {
 		return this;
 	}
 
-	public void draw( PGraphics theGraphics , int theX , int theY , ControllerInterface< ? > theController ) {
+	public void draw( PGraphics theGraphics , float theX , float theY , ControllerInterface< ? > theController ) {
 		if ( isVisible ) {
 			getLabeltype( ).draw( this , theGraphics , theX , theY , theController );
 		}
 	}
 
-	public void draw( PGraphics theGraphics , int theX , int theY , int theW , int theH ) {
+	public void draw( PGraphics theGraphics , float theX , float theY , int theW , int theH ) {
 		if ( isVisible ) {
 			getLabeltype( ).draw( this , theGraphics , theX , theY , theW , theH );
 		}
@@ -169,7 +169,7 @@ public class Label implements CDrawable {
 		}
 	}
 
-	public void draw( PGraphics theGraphics , int theX , int theY ) {
+	public void draw( PGraphics theGraphics , float theX , float theY ) {
 		if ( isVisible ) {
 			theGraphics.pushMatrix( );
 			theGraphics.translate( _myControllerStyle.marginLeft , _myControllerStyle.marginTop );
@@ -415,9 +415,9 @@ public class Label implements CDrawable {
 
 	interface Labeltype {
 
-		public void draw( Label theLabel , PGraphics theGraphics , int theX , int theY , ControllerInterface< ? > theController );
+		public void draw( Label theLabel , PGraphics theGraphics , float theX , float theY , ControllerInterface< ? > theController );
 
-		public void draw( Label theLabel , PGraphics theGraphics , int theX , int theY , int theW , int theH );
+		public void draw( Label theLabel , PGraphics theGraphics , float theX , float theY , int theW , int theH );
 
 		public int getWidth( );
 
@@ -480,7 +480,7 @@ public class Label implements CDrawable {
 			theGraphics.translate( x , y );
 		}
 
-		@Override public void draw( Label theLabel , PGraphics theGraphics , int theX , int theY , int theW , int theH ) {
+		@Override public void draw( Label theLabel , PGraphics theGraphics , float theX , float theY , int theW , int theH ) {
 			_myFontLabel.adjust( theGraphics , theLabel );
 			theGraphics.pushMatrix( );
 			align( theGraphics , alignX , alignY , theW , theH );
@@ -488,7 +488,7 @@ public class Label implements CDrawable {
 			theGraphics.popMatrix( );
 		}
 
-		@Override public void draw( Label theLabel , PGraphics theGraphics , int theX , int theY , ControllerInterface< ? > theController ) {
+		@Override public void draw( Label theLabel , PGraphics theGraphics , float theX , float theY , ControllerInterface< ? > theController ) {
 			draw( theLabel , theGraphics , theX , theY , theController.getWidth( ) , theController.getHeight( ) );
 		}
 
@@ -511,12 +511,12 @@ public class Label implements CDrawable {
 
 	class MultilineLabel implements Labeltype {
 
-		@Override public void draw( Label theLabel , PGraphics theGraphics , int theX , int theY , int theW , int theH ) {
+		@Override public void draw( Label theLabel , PGraphics theGraphics , float theX , float theY , int theW , int theH ) {
 			_myFontLabel.adjust( theGraphics , theLabel );
 			theLabel.draw( theGraphics , theX , theY );
 		}
 
-		@Override public void draw( Label theLabel , PGraphics theGraphics , int theX , int theY , ControllerInterface< ? > theController ) {
+		@Override public void draw( Label theLabel , PGraphics theGraphics , float theX , float theY , ControllerInterface< ? > theController ) {
 			_myFontLabel.adjust( theGraphics , theLabel );
 			theLabel.draw( theGraphics , theX , theY );
 		}

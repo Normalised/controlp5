@@ -386,7 +386,7 @@ public class ControlBroadcaster {
 			this( 0 , 0 );
 		}
 
-		protected EmptyController( int theX , int theY ) {
+		protected EmptyController( float theX , float theY ) {
 			super( "empty" + ( ( int ) ( Math.random( ) * 1000000 ) ) , theX , theY );
 			// TODO Auto-generated constructor stub
 		}

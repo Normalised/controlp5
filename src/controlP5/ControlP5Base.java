@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import controlP5.util.Point2D;
 import processing.core.PApplet;
 import processing.event.Event;
 
@@ -372,43 +373,43 @@ import static controlP5.Controller.*;
 	}
 
 	public void setAutoSpacing( ) {
-		set( Controller.autoSpacing , 10 , 10 );
+	    Controller.autoSpacing.setLocation(10,10);
 	}
 
 	public void setAutoSpacing( float theX , float theY ) {
-		set( Controller.autoSpacing , theX , theY );
+	    Controller.autoSpacing.setLocation(theX, theY);
 	}
 
 	public void setAutoSpacing( float theX , float theY , float theZ ) {
 		setAutoSpacing( theX , theY );
 	}
 
-	@SuppressWarnings( "static-access" ) protected void linebreak( Controller< ? > theController , boolean theFlag , int theW , int theH , float[] theSpacing ) {
-		if ( x( currentGroupPointer.autoPosition ) + x( theController.autoSpacing ) + theW > cp5.papplet.width ) {
-			float x = x( currentGroupPointer.autoPosition ) + currentGroupPointer.autoPositionOffsetX;
-			float y = y( currentGroupPointer.autoPosition ) + currentGroupPointer.tempAutoPositionHeight;
-			set( currentGroupPointer.autoPosition , x , y );
+	@SuppressWarnings( "static-access" ) protected void linebreak( Controller< ? > theController , boolean theFlag , int theW , int theH , Point2D theSpacing ) {
+		if ( currentGroupPointer.autoPosition.x + theController.autoSpacing.x + theW > cp5.papplet.width ) {
+			float x = currentGroupPointer.autoPosition.x + currentGroupPointer.autoPositionOffsetX;
+			float y = currentGroupPointer.autoPosition.y + currentGroupPointer.tempAutoPositionHeight;
+			currentGroupPointer.autoPosition.setLocation(x,y);
 			currentGroupPointer.tempAutoPositionHeight = 0;
-			Controller.set( theController.position , Controller.x( currentGroupPointer.autoPosition ) , Controller.y( currentGroupPointer.autoPosition ) );
+			theController.position.setTo(currentGroupPointer.autoPosition);
 			theFlag = false;
 		}
 
 		if ( theFlag == true ) {
-			float y = y( currentGroupPointer.autoPosition ) + currentGroupPointer.tempAutoPositionHeight;
-			set( currentGroupPointer.autoPosition , currentGroupPointer.autoPositionOffsetX , y );
+			float y = currentGroupPointer.autoPosition.y + currentGroupPointer.tempAutoPositionHeight;
+			currentGroupPointer.autoPosition.setLocation(currentGroupPointer.autoPositionOffsetX, y);
 			currentGroupPointer.tempAutoPositionHeight = 0;
 
 		} else {
 			if ( theController instanceof Slider ) {
-				float x = x( currentGroupPointer.autoPosition ) + theController.getCaptionLabel( ).getWidth( );
-				float y = y( currentGroupPointer.autoPosition );
-				set( currentGroupPointer.autoPosition , x , y );
+				float x = currentGroupPointer.autoPosition.x + theController.getCaptionLabel( ).getWidth( );
+				float y = currentGroupPointer.autoPosition.y;
+				currentGroupPointer.autoPosition.setLocation(x,y);
 			}
-			float x = x( currentGroupPointer.autoPosition ) + x( theController.autoSpacing ) + theW;
-			float y = y( currentGroupPointer.autoPosition );
-			set( currentGroupPointer.autoPosition , x , y );
-			if ( ( theH + y( theSpacing ) ) > currentGroupPointer.tempAutoPositionHeight ) {
-				currentGroupPointer.tempAutoPositionHeight = theH + y( theSpacing );
+			float x = currentGroupPointer.autoPosition.x + theController.autoSpacing.x + theW;
+			float y = currentGroupPointer.autoPosition.y;
+			currentGroupPointer.autoPosition.setLocation(x,y);
+			if ( ( theH + theSpacing.y ) > currentGroupPointer.tempAutoPositionHeight ) {
+				currentGroupPointer.tempAutoPositionHeight = theH + theSpacing.y;
 			}
 		}
 	}
@@ -453,13 +454,11 @@ import static controlP5.Controller.*;
 		return null;
 	}
 
-	public ControlP5Base setPosition( int theX , int theY , Object o ) {
+	public ControlP5Base setPosition( float theX , float theY , Object o ) {
 		if ( o != null && _myObjectToControllerMap.containsKey( o ) ) {
 			ArrayList< ControllerInterface< ? >> cs = _myObjectToControllerMap.get( o );
 			for ( ControllerInterface< ? > c : cs ) {
-				int x = ( int ) x( c.getPosition( ) ) + theX;
-				int y = ( int ) y( c.getPosition( ) ) + theY;
-				c.setPosition( x , y );
+				c.getPosition().add(theX, theY);
 			}
 		}
 		return cp5;

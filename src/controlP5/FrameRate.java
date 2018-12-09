@@ -36,7 +36,7 @@ public class FrameRate extends Textlabel {
 
 	private int cnt = 0;
 
-	protected FrameRate( final ControlP5 theControlP5 , final Tab theParent , final String theValue , final int theX , final int theY ) {
+	protected FrameRate( final ControlP5 theControlP5 , final Tab theParent , final String theValue , final float theX , final float theY ) {
 		super( theControlP5 , theParent , "framerate" , "-" , theX , theY );
 	}
 

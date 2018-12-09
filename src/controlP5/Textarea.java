@@ -81,7 +81,7 @@ public class Textarea extends ControllerGroup< Textarea > implements ControlList
 	 * @param theH
 	 *            int
 	 */
-	protected Textarea( ControlP5 theControlP5 , ControllerGroup< ? > theGroup , String theName , String theText , int theX , int theY , int theW , int theH ) {
+	protected Textarea( ControlP5 theControlP5 , ControllerGroup< ? > theGroup , String theName , String theText , float theX , float theY , int theW , int theH ) {
 		super( theControlP5 , theGroup , theName , theX , theY );
 		_myWidth = theW;
 		_myHeight = theH;
@@ -98,7 +98,7 @@ public class Textarea extends ControllerGroup< Textarea > implements ControlList
 	 * @param theY
 	 *            int
 	 */
-	public Textarea( String theText , int theX , int theY ) {
+	public Textarea( String theText , float theX , float theY ) {
 		super( theX , theY );
 		_myText = theText;
 		setup( );
@@ -327,8 +327,8 @@ public class Textarea extends ControllerGroup< Textarea > implements ControlList
 		}
 		if ( _myScrollbar.isVisible( ) || isColorBackground ) {
 			float x = _myWidth - _myScrollbarWidth + _myValueLabel.getStyle( ).paddingLeft + _myValueLabel.getStyle( ).paddingRight;
-			float y = y( _myScrollbar.getPosition( ) );
-			set( _myScrollbar.getPosition( ) , x , y );
+			float y = _myScrollbar.getPosition().y;
+			_myScrollbar.getPosition().setLocation(x,y);
 			if ( !isColorBackground ) {
 				theGraphics.noFill( );
 			} else {
@@ -344,8 +344,8 @@ public class Textarea extends ControllerGroup< Textarea > implements ControlList
 	// !!! add padding to the box.
 	// padding and margin doesnt work nicely with textarea yet!
 	protected boolean inside( ) {
-		return ( cp5.getWindow( ).mouseX > x( position ) + x( _myParent.absolutePosition ) && cp5.getWindow( ).mouseX < x( position ) + x( _myParent.absolutePosition ) + _myWidth
-		    && cp5.getWindow( ).mouseY > y( position ) + y( _myParent.absolutePosition ) && cp5.getWindow( ).mouseY < y( position ) + y( _myParent.absolutePosition ) + _myHeight );
+		return ( cp5.getWindow( ).mouseX > position.x + _myParent.absolutePosition.x && cp5.getWindow( ).mouseX < position.x + _myParent.absolutePosition.x + _myWidth
+		    && cp5.getWindow( ).mouseY > position.y + _myParent.absolutePosition.y && cp5.getWindow( ).mouseY < position.y + _myParent.absolutePosition.y + _myHeight );
 	}
 
 	public String getStringValue( ) {

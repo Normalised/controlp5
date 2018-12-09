@@ -28,6 +28,7 @@ package controlP5;
 import java.util.ArrayList;
 import java.util.List;
 
+import controlP5.util.Point2D;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PGraphics;
@@ -39,9 +40,9 @@ import processing.event.KeyEvent;
  */
 public abstract class ControllerGroup< T > implements ControllerInterface< T > , ControlP5Constants , ControlListener {
 
-	protected float[] position = new float[ 2 ];
-	protected float[] positionBuffer = new float[ 2 ];
-	protected float[] absolutePosition = new float[ 2 ];
+	protected Point2D position = new Point2D();
+	protected Point2D positionBuffer = new Point2D();
+	protected Point2D absolutePosition = new Point2D();
 	protected ControllerList controllers;
 	protected List< ControlListener > _myControlListener;
 	// protected ControlWindow _myControlWindow;
@@ -72,7 +73,7 @@ public abstract class ControllerGroup< T > implements ControllerInterface< T > ,
 	protected float[] _myArrayValue;
 	protected boolean isCollapse = true;
 	protected int _myPickingColor = 0x6600ffff;
-	protected float[] autoPosition = new float[] { 10 , 30 };
+	protected Point2D autoPosition = new Point2D( 10 , 30 );
 	protected float tempAutoPositionHeight = 0;
 	protected float autoPositionOffsetX = 10;
 	private String _myAddress = "";
@@ -88,7 +89,7 @@ public abstract class ControllerGroup< T > implements ControllerInterface< T > ,
 	}
 
 	public ControllerGroup( ControlP5 theControlP5 , ControllerGroup< ? > theParent , String theName , float theX , float theY ) {
-		position = new float[] { theX , theY };
+		position = new Point2D(theX , theY);
 		cp5 = theControlP5;
 		me = ( T ) this;
 		color.set( ( theParent == null ) ? cp5.color : theParent.color );
@@ -103,8 +104,8 @@ public abstract class ControllerGroup< T > implements ControllerInterface< T > ,
 		setParent( ( theParent == null ) ? this : theParent );
 	}
 
-	protected ControllerGroup( int theX , int theY ) {
-		position = new float[] { theX , theY };
+	protected ControllerGroup( float theX , float theY ) {
+		position = new Point2D(theX , theY);
 		me = ( T ) this;
 		controllers = new ControllerList( );
 		_myCanvas = new ArrayList< Canvas >( );
@@ -129,9 +130,8 @@ public abstract class ControllerGroup< T > implements ControllerInterface< T > ,
 			_myParent.add( this );
 		}
 
-		set( absolutePosition , x( position ) , y( position ) );
-		set( absolutePosition , x( absolutePosition ) + x( _myParent.absolutePosition ) , y( absolutePosition ) + y( _myParent.absolutePosition ) );
-		set( positionBuffer , x( position ) , y( position ) );
+		absolutePosition = position.add(_myParent.absolutePosition);
+		positionBuffer.setTo(position);
 
 		if ( cp5.getWindow( ) != null ) {
 			setMouseOver( false );
@@ -241,34 +241,33 @@ public abstract class ControllerGroup< T > implements ControllerInterface< T > ,
 		}
 	}
 
-	@ControlP5.Invisible public float[] getAbsolutePosition( ) {
-		return new float[] { x( absolutePosition ) , y( absolutePosition ) };
+	@ControlP5.Invisible public Point2D getAbsolutePosition( ) {
+		return absolutePosition.clone();
 	}
 
-	@ControlP5.Invisible public T setAbsolutePosition( float[] thePos ) {
-		set( absolutePosition , x( thePos ) , y( thePos ) );
+	@ControlP5.Invisible public T setAbsolutePosition( Point2D thePos ) {
+		absolutePosition.setTo(thePos);
 		return me;
 	}
 
-	public float[] getPosition( ) {
-		return new float[] { x( position ) , y( position ) };
+	public Point2D getPosition( ) {
+		return position.clone();
 	}
 
 	public T setPosition( float theX , float theY ) {
-		set( position , ( int ) theX , ( int ) theY );
-		set( positionBuffer , x( position ) , y( position ) );
+		position.setLocation(theX,theY);
+		positionBuffer.setTo(position);
 		updateAbsolutePosition( );
 		return me;
 	}
 
-	public T setPosition( float[] thePosition ) {
-		setPosition( x( thePosition ) , y( thePosition ) );
+	public T setPosition( Point2D thePosition ) {
+		setPosition( thePosition.x, thePosition.y );
 		return me;
 	}
 
 	public T updateAbsolutePosition( ) {
-		set( absolutePosition , x( position ) , y( position ) );
-		set( absolutePosition , x( absolutePosition ) + x( _myParent.getAbsolutePosition( ) ) , y( absolutePosition ) + y( _myParent.getAbsolutePosition( ) ) );
+		absolutePosition.setTo(position.add(_myParent.getAbsolutePosition()));
 		for ( int i = 0 ; i < controllers.size( ) ; i++ ) {
 			controllers.get( i ).updateAbsolutePosition( );
 		}
@@ -324,11 +323,11 @@ public abstract class ControllerGroup< T > implements ControllerInterface< T > ,
 			if ( ( isMousePressed == cp5.getWindow( ).mouselock ) ) {
 				if ( isMousePressed && cp5.isAltDown( ) && isMoveable ) {
 					if ( !cp5.isMoveable ) {
-						set( positionBuffer , x( positionBuffer ) + cp5.getWindow( ).mouseX - cp5.getWindow( ).pmouseX , y( positionBuffer ) + cp5.getWindow( ).mouseY - cp5.getWindow( ).pmouseY );
+					    positionBuffer = positionBuffer.add(cp5.getWindow().getMousePosition().subtract(cp5.getWindow().getPMousePosition()));
 						if ( cp5.isShiftDown( ) ) {
-							set( position , ( ( ( int ) ( x( positionBuffer ) ) / 10 ) * 10 ) , ( ( ( int ) ( y( positionBuffer ) ) / 10 ) * 10 ) );
+						    position = positionBuffer.quantised(10);
 						} else {
-							set( position , x( positionBuffer ) , y( positionBuffer ) );
+						    position.setTo(positionBuffer);
 						}
 						updateAbsolutePosition( );
 					}
@@ -386,7 +385,7 @@ public abstract class ControllerGroup< T > implements ControllerInterface< T > ,
 	@ControlP5.Invisible public final void draw( PGraphics theGraphics ) {
 		if ( isVisible ) {
 			theGraphics.pushMatrix( );
-			theGraphics.translate( x( position ) , y( position ) );
+			theGraphics.translate( position.x, position.y );
 			preDraw( theGraphics );
 			drawControllers( cp5.papplet , theGraphics );
 			postDraw( theGraphics );
@@ -864,8 +863,8 @@ public abstract class ControllerGroup< T > implements ControllerInterface< T > ,
 	}
 
 	protected boolean inside( ) {
-		return ( cp5.getWindow( ).mouseX > x( position ) + x( _myParent.absolutePosition ) && cp5.getWindow( ).mouseX < x( position ) + x( _myParent.absolutePosition ) + _myWidth
-		    && cp5.getWindow( ).mouseY > y( position ) + y( _myParent.absolutePosition ) - _myHeight && cp5.getWindow( ).mouseY < y( position ) + y( _myParent.absolutePosition ) );
+		return ( cp5.getWindow( ).mouseX > position.x + _myParent.absolutePosition.x && cp5.getWindow( ).mouseX < position.x + _myParent.absolutePosition.x + _myWidth
+		    && cp5.getWindow( ).mouseY > position.y + _myParent.absolutePosition.y - _myHeight && cp5.getWindow( ).mouseY < position.y + _myParent.absolutePosition.y);
 	}
 
 	public ControllerProperty getProperty( String thePropertyName ) {

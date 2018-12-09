@@ -25,6 +25,7 @@ package controlP5;
  * 
  */
 
+import controlP5.util.Point2D;
 import processing.core.PGraphics;
 import processing.core.PImage;
 
@@ -41,7 +42,7 @@ public class Toggle extends Controller< Toggle > {
 	protected float internalValue = -1;
 	public static int autoWidth = 39;
 	public static int autoHeight = 19;
-	protected float[] autoSpacing = new float[] { 10 , 20 };
+	protected Point2D autoSpacing = new Point2D( 10 , 20 );
 
 	/**
 	 * Convenience constructor to extend Toggle.
@@ -63,11 +64,11 @@ public class Toggle extends Controller< Toggle > {
 
 	/**
 	 * 
-	 * @param theApplet PApplet
+	 * @param theGraphics PGraphics
 	 */
 	@ControlP5.Invisible public void draw( PGraphics theGraphics ) {
 		theGraphics.pushMatrix( );
-		theGraphics.translate( x( position ) , y( position ) );
+		theGraphics.translate( position.x , position.y );
 		_myControllerView.display( theGraphics , this );
 		theGraphics.popMatrix( );
 	}

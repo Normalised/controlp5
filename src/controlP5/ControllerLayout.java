@@ -68,7 +68,7 @@ class ControllerLayout {
 				layoutelements.add( new ControllerLayoutElement( c ) );
 				System.out.print( c.getAddress( ) );
 				System.out.print( " (" + c.getName( ) + ") " );
-				System.out.print( "\tpos:" + Controller.x( c.getPosition( ) ) + "," + Controller.y( c.getPosition( ) ) );
+				System.out.print( "\tpos:" + c.getPosition().toString());
 				System.out.print( "\tdim:" + c.getWidth( ) + "," + c.getHeight( ) );
 				System.out.print( "\tparent:" + c.getParent( ) );
 				System.out.println( "\tclass:" + c.getClass( ).getSimpleName( ) );

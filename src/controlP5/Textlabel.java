@@ -51,7 +51,7 @@ public class Textlabel extends Controller< Textlabel > {
 	 * @param theX int
 	 * @param theY int
 	 */
-	protected Textlabel( final ControlP5 theControlP5 , final Tab theParent , final String theName , final String theValue , final int theX , final int theY ) {
+	protected Textlabel( final ControlP5 theControlP5 , final Tab theParent , final String theName , final String theValue , final float theX , final float theY ) {
 		super( theControlP5 , theParent , theName , theX , theY , 200 , 20 );
 		_myStringValue = theValue;
 		setup( );
@@ -63,13 +63,13 @@ public class Textlabel extends Controller< Textlabel > {
 	 * @param theX int
 	 * @param theY int
 	 */
-	protected Textlabel( final String theValue , final int theX , final int theY ) {
+	protected Textlabel( final String theValue , final float theX , final float theY ) {
 		super( "" , theX , theY );
 		_myStringValue = theValue;
 		setup( );
 	}
 
-	protected Textlabel( final String theValue , final int theX , final int theY , final int theW , final int theH , final int theColor ) {
+	protected Textlabel( final String theValue , final float theX , final float theY , final int theW , final int theH , final int theColor ) {
 		super( "" , theX , theY );
 
 		_myStringValue = theValue;
@@ -79,7 +79,7 @@ public class Textlabel extends Controller< Textlabel > {
 		_myValueLabel.toUpperCase( false );
 	}
 
-	public Textlabel( ControlP5 theControlP5 , final String theValue , final int theX , final int theY ) {
+	public Textlabel( ControlP5 theControlP5 , final String theValue , final float theX , final float theY ) {
 		super( "" , theX , theY );
 
 		cp5 = theControlP5;
@@ -91,7 +91,7 @@ public class Textlabel extends Controller< Textlabel > {
 		_myValueLabel.toUpperCase( false );
 	}
 
-	public Textlabel( ControlP5 theControlP5 , final String theValue , final int theX , final int theY , final int theW , final int theH ) {
+	public Textlabel( ControlP5 theControlP5 , final String theValue , final float theX , final float theY , final int theW , final int theH ) {
 		super( "" , theX , theY );
 		cp5 = theControlP5;
 		_myStringValue = theValue;
@@ -125,7 +125,7 @@ public class Textlabel extends Controller< Textlabel > {
 	@Override public void draw( final PGraphics theGraphics ) {
 		if ( !disabled ) {
 			theGraphics.pushMatrix( );
-			theGraphics.translate( x( position ) , y( position ) );
+			theGraphics.translate( position.x , position.y );
 			_myValueLabel.draw( theGraphics , 0 , 0 , this );
 			theGraphics.popMatrix( );
 		}
@@ -135,7 +135,7 @@ public class Textlabel extends Controller< Textlabel > {
 		draw( cp5.pg );
 	}
 
-	public void draw( int theX , int theY ) {
+	public void draw( float theX , float theY ) {
 		cp5.papplet.pushMatrix( );
 		cp5.papplet.translate( theX , theY );
 		draw( cp5.pg );
@@ -224,8 +224,8 @@ public class Textlabel extends Controller< Textlabel > {
 	}
 
 	protected boolean inside( ) {
-		return ( _myControlWindow.mouseX > x( position ) + x( _myParent.getAbsolutePosition( ) ) && _myControlWindow.mouseX < x( position ) + x( _myParent.getAbsolutePosition( ) ) + _myValueLabel.getWidth( )
-		    && _myControlWindow.mouseY > y( position ) + y( _myParent.getAbsolutePosition( ) ) && _myControlWindow.mouseY < y( position ) + y( _myParent.getAbsolutePosition( ) ) + _myValueLabel.getHeight( ) );
+		return ( _myControlWindow.mouseX > position.x + _myParent.getAbsolutePosition( ).x && _myControlWindow.mouseX < position.x + _myParent.getAbsolutePosition( ).x + _myValueLabel.getWidth( )
+		    && _myControlWindow.mouseY > position.y + _myParent.getAbsolutePosition().y && _myControlWindow.mouseY < position.y + _myParent.getAbsolutePosition().y + _myValueLabel.getHeight( ) );
 	}
 
 	public Label get( ) {

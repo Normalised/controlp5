@@ -64,7 +64,7 @@ public class MultiList extends Controller< MultiList > implements MultiListInter
 		theControlP5.register( theControlP5.papplet , theName , this );
 	}
 
-	public MultiList( ControlP5 theControlP5 , Tab theParent , String theName , int theX , int theY , int theWidth , int theHeight ) {
+	public MultiList( ControlP5 theControlP5 , Tab theParent , String theName , float theX , float theY , int theWidth , int theHeight ) {
 		super( theControlP5 , theParent , theName , theX , theY , theWidth , 0 );
 		_myDefaultButtonHeight = theHeight;
 		setup( );
@@ -81,7 +81,7 @@ public class MultiList extends Controller< MultiList > implements MultiListInter
 	@ControlP5.Invisible public void setup( ) {
 		mostRecent = this;
 		isVisible = true;
-		updateRect( x( position ) , y( position ) , getWidth( ) , _myDefaultButtonHeight );
+		updateRect( position.x , position.y , getWidth( ) , _myDefaultButtonHeight );
 	}
 
 	protected void updateRect( float theX , float theY , float theW , float theH ) {
@@ -111,8 +111,8 @@ public class MultiList extends Controller< MultiList > implements MultiListInter
 	 *            float
 	 */
 	@ControlP5.Invisible public void updateLocation( float theX , float theY ) {
-		set( position , theX , theY );
-		updateRect( x( position ) , y( position ) , getWidth( ) , _myDefaultButtonHeight );
+		position.setLocation(theX, theY);
+		updateRect( position.x , position.y , getWidth( ) , _myDefaultButtonHeight );
 		for ( int i = 0 ; i < getSubelements( ).size( ) ; i++ ) {
 			( ( MultiListInterface ) getSubelements( ).get( i ) ).updateLocation( theX , theY );
 		}
@@ -140,12 +140,12 @@ public class MultiList extends Controller< MultiList > implements MultiListInter
 	 * @return MultiListButton
 	 */
 	public MultiListButton add( String theName , int theValue ) {
-		int x = ( int ) x( position );
+		int x = ( int ) position.x;
 		int yy = 0;
 		for ( Controller< ? > c : getSubelements( ) ) {
 			yy += c.getHeight( ) + 1;
 		}
-		int y = ( int ) y( position ) + yy;// (_myDefaultButtonHeight + 1) * _myChildren.size();
+		int y = ( int ) position.y + yy;// (_myDefaultButtonHeight + 1) * _myChildren.size();
 		MultiListButton b = new MultiListButton( cp5 , theName , theValue , x , y , getWidth( ) , _myDefaultButtonHeight , this , this );
 		b.toUpperCase( isUpperCase );
 		b.isMoveable = false;
@@ -153,7 +153,7 @@ public class MultiList extends Controller< MultiList > implements MultiListInter
 		b.addListener( this );
 		getSubelements( ).add( b );
 		b.show( );
-		updateRect( x( position ) , y( position ) , getWidth( ) , ( _myDefaultButtonHeight + 1 ) * getSubelements( ).size( ) );
+		updateRect( position.x , position.y , getWidth( ) , ( _myDefaultButtonHeight + 1 ) * getSubelements( ).size( ) );
 		return b;
 	}
 

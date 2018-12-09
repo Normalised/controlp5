@@ -25,6 +25,7 @@ package controlP5;
  * 
  */
 
+import controlP5.util.Point2D;
 import processing.core.PGraphics;
 
 /**
@@ -55,8 +56,8 @@ public class Tab extends ControllerGroup< Tab > {
 	 */
 	public Tab( ControlP5 theControlP5 , ControlWindow theControlWindow , String theName ) {
 		super( theControlP5 , null , theName , 0 , 0 );
-		position = new float[ 2 ];
-		absolutePosition = new float[ 2 ];
+		position = new Point2D();
+		absolutePosition = new Point2D();
 		isMoveable = false;
 		isEventActive = theControlP5.isTabEventsActive;
 		_myHeight = 16;

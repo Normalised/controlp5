@@ -25,10 +25,12 @@ package controlP5;
  * 
  */
 
+import controlP5.util.Point2D;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PGraphics;
 import processing.event.KeyEvent;
+
 
 /**
  * 
@@ -61,15 +63,15 @@ public interface ControllerInterface< T > {
 
 	public int getId( );
 
-	public float[] getPosition( );
+	public Point2D getPosition( );
 
 	@ControlP5.Invisible public T setPosition( float theX , float theY );
 
-	@ControlP5.Invisible public T setPosition( float[] thePosition );
+	@ControlP5.Invisible public T setPosition( Point2D thePosition );
 
-	public float[] getAbsolutePosition( );
+	public Point2D getAbsolutePosition( );
 
-	public T setAbsolutePosition( float[] thePosition );
+	public T setAbsolutePosition( Point2D thePosition );
 
 	public T updateAbsolutePosition( );
 

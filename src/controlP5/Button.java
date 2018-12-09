@@ -58,7 +58,7 @@ public class Button extends Controller< Button > {
 		theControlP5.register( theControlP5.papplet , theName , this );
 	}
 
-	protected Button( ControlP5 theControlP5 , ControllerGroup< ? > theParent , String theName , float theDefaultValue , int theX , int theY , int theWidth , int theHeight ) {
+	protected Button( ControlP5 theControlP5 , ControllerGroup< ? > theParent , String theName , float theDefaultValue , float theX , float theY , int theWidth , int theHeight ) {
 		super( theControlP5 , theParent , theName , theX , theY , theWidth , theHeight );
 		_myValue = theDefaultValue;
 		_myCaptionLabel.align( CENTER , CENTER );

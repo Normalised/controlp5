@@ -25,6 +25,7 @@ package controlP5;
  * 
  */
 
+import controlP5.util.Point2D;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
@@ -57,7 +58,7 @@ public class Numberbox extends Controller< Numberbox > {
 	protected float _myMultiplier = 1;
 	public static int autoWidth = 69;
 	public static int autoHeight = 19;
-	protected float[] autoSpacing = new float[] { 10 , 20 };
+	protected Point2D autoSpacing = new Point2D( 10 , 20 );
 	protected float scrollSensitivity = 0.1f;
 
 	/**
@@ -83,7 +84,7 @@ public class Numberbox extends Controller< Numberbox > {
 	 * @param theWidth int
 	 * @param theHeight int
 	 */
-	public Numberbox( ControlP5 theControlP5 , Tab theParent , String theName , float theDefaultValue , int theX , int theY , int theWidth , int theHeight ) {
+	public Numberbox( ControlP5 theControlP5 , Tab theParent , String theName , float theDefaultValue , float theX , float theY , int theWidth , int theHeight ) {
 		super( theControlP5 , theParent , theName , theX , theY , theWidth , theHeight );
 		_myMin = -Float.MAX_VALUE;
 		_myMax = Float.MAX_VALUE;

@@ -44,17 +44,11 @@ public class MultiListButton extends Button implements MultiListInterface {
 	protected int _myDirection = ControlP5Constants.RIGHT;
 	private boolean isUpperCase = true;
 
-	/**
-	 * 
-	 * @param theProperties ControllerProperties
-	 * @param theParent MultiListInterface
-	 * @param theRoot MultiList
-	 */
-	protected MultiListButton( ControlP5 theControlP5 , String theName , float theValue , int theX , int theY , int theWidth , int theHeight , Controller theParent , MultiList theRoot ) {
+	protected MultiListButton( ControlP5 theControlP5 , String theName , float theValue , float theX , float theY , int theWidth , int theHeight , Controller theParent , MultiList theRoot ) {
 		super( theControlP5 , ( ControllerGroup< ? > ) theRoot.getParent( ) , theName , theValue , theX , theY , theWidth , theHeight );
 		parent = theParent;
 		root = theRoot;
-		updateRect( x( position ) , y( position ) , getWidth( ) , getHeight( ) );
+		updateRect( position.x , position.y , getWidth( ) , getHeight( ) );
 		_myCaptionLabel.align( LEFT , CENTER );
 	}
 
@@ -102,8 +96,8 @@ public class MultiListButton extends Button implements MultiListInterface {
 	}
 
 	public void updateLocation( float theX , float theY ) {
-		set( position , theX , theY );
-		updateRect( x( position ) , y( position ) , getWidth( ) , getHeight( ) );
+		position.setLocation(theX, theY);
+		updateRect( position.x , position.y , getWidth( ) , getHeight( ) );
 		for ( int i = 0 ; i < getSubelements( ).size( ) ; i++ ) {
 			( ( MultiListInterface ) getSubelements( ).get( i ) ).updateLocation( theX , theY );
 		}
@@ -159,15 +153,15 @@ public class MultiListButton extends Button implements MultiListInterface {
 		// negative direction, this is static now, make it dynamic depending on
 		// the
 		// location of the list.
-		int xx = ( ( int ) x( position ) + ( getWidth( ) + 1 ) );
-		MultiListButton b = new MultiListButton( cp5 , theName , theValue , xx , ( int ) y( position ) + ( getHeight( ) + 1 ) + myHeight , ( int ) getWidth( ) , ( int ) getHeight( ) , this , root );
+		int xx = ( ( int ) position.x + ( getWidth( ) + 1 ) );
+		MultiListButton b = new MultiListButton( cp5 , theName , theValue , xx , ( int ) position.y + ( getHeight( ) + 1 ) + myHeight , ( int ) getWidth( ) , ( int ) getHeight( ) , this , root );
 		b.isMoveable = false;
 		b.toUpperCase( isUpperCase );
 		b.hide( );
 		cp5.register( null , "" , b );
 		b.addListener( root );
 		getSubelements( ).add( b );
-		updateRect( xx , y( position ) , getWidth( ) , ( getHeight( ) + 1 ) + myHeight );
+		updateRect( xx , position.y , getWidth( ) , ( getHeight( ) + 1 ) + myHeight );
 		return b;
 	}
 

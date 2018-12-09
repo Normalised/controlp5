@@ -69,7 +69,7 @@ public class ListBox extends Controller< ListBox > implements ControlListener {
 		theControlP5.register( theControlP5.papplet , theName , this );
 	}
 
-	protected ListBox( ControlP5 theControlP5 , ControllerGroup< ? > theGroup , String theName , int theX , int theY , int theW , int theH ) {
+	protected ListBox( ControlP5 theControlP5 , ControllerGroup< ? > theGroup , String theName , float theX , float theY , int theW , int theH ) {
 		super( theControlP5 , theGroup , theName , theX , theY , theW , theH );
 		items = new ArrayList< Map< String , Object > >( );
 		updateHeight( );
@@ -109,10 +109,11 @@ public class ListBox extends Controller< ListBox > implements ControlListener {
 		/* constrain the bounds of the controller to the
 		 * dimensions of the cp5 area, required since
 		 * PGraphics as render area has been introduced. */
-		float x0 = PApplet.max( 0 , x( position ) + x( _myParent.getAbsolutePosition( ) ) );
-		float x1 = PApplet.min( cp5.pgw , x( position ) + x( _myParent.getAbsolutePosition( ) ) + getWidth( ) );
-		float y0 = PApplet.max( 0 , y( position ) + y( _myParent.getAbsolutePosition( ) ) );
-		float y1 = PApplet.min( cp5.pgh , y( position ) + y( _myParent.getAbsolutePosition( ) ) + getHeight( ) );
+		float x0 = PApplet.max(0, position.x + _myParent.getAbsolutePosition().x);
+		float x1 = PApplet.min(cp5.pgw, position.x + _myParent.getAbsolutePosition().x + getWidth());
+		float y0 = PApplet.max(0, position.y + _myParent.getAbsolutePosition().y);
+		float y1 = PApplet.min(cp5.pgh, position.y + _myParent.getAbsolutePosition().y + getHeight());
+
 		if ( y1 < y0 ) {
 			float ty = y0;
 			y0 = y1;

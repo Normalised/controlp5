@@ -28,6 +28,7 @@ package controlP5;
 import java.util.HashMap;
 import java.util.Map;
 
+import controlP5.util.Point2D;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
@@ -40,7 +41,7 @@ public class ColorWheel extends Controller< ColorWheel > {
 
 	private int _myColorValue = 0xffffffff;
 	private final Map< String , PGraphics > _myColorResources;
-	private final float[] _myCursor;
+	private final Point2D _myCursor;
 	private float scalar = 0.8f;
 	private int yoff = 10;
 	private boolean isInfo = false;
@@ -65,12 +66,12 @@ public class ColorWheel extends Controller< ColorWheel > {
 		theControlP5.register( theControlP5.papplet , theName , this );
 	}
 
-	public ColorWheel( ControlP5 theControlP5 , ControllerGroup< ? > theParent , String theName , int theX , int theY , int theWidth , int theHeight ) {
+	public ColorWheel( ControlP5 theControlP5 , ControllerGroup< ? > theParent , String theName , float theX , float theY , int theWidth , int theHeight ) {
 		super( theControlP5 , theParent , theName , theX , theY , theWidth , theHeight );
 
 		_myColorResources = new HashMap< String , PGraphics >( );
 		_myColorResources.put( "default" , cp5.papplet.createGraphics( theWidth , theHeight ) );
-		_myCursor = new float[] { getWidth( ) / 2 , getHeight( ) / 2 };
+		_myCursor = new Point2D(getWidth( ) / 2 , getHeight( ) / 2 );
 		_myCaptionLabel.align( LEFT , BOTTOM_OUTSIDE );
 		_myCaptionLabel.setPaddingX( 0 );
 		_myInfoLabel = new Label( cp5 , theName + "-info" );
@@ -126,7 +127,7 @@ public class ColorWheel extends Controller< ColorWheel > {
 				x = ( xcenter + Math.cos( a ) * d0 );
 				y = ( ycenter + Math.sin( a ) * d0 );
 			}
-			set( _myCursor , ( float ) x , ( float ) y );
+			_myCursor.setLocation( (float) x, (float) y);
 
 			int xx = ( int ) x;
 			int yy = ( int ) y;
@@ -191,7 +192,7 @@ public class ColorWheel extends Controller< ColorWheel > {
 
 		int h = buffer.height;
 
-		float[] center = new float[] { w / 2 , h / 2 };
+		Point2D center = new Point2D( w / 2 , h / 2 );
 
 		int inner_radius = ( int ) ( buffer.width * 0.1 );
 
@@ -203,9 +204,9 @@ public class ColorWheel extends Controller< ColorWheel > {
 		buffer.ellipse( buffer.width / 2 , buffer.height / 2 , ( inner_radius + 1 ) * 2 , ( inner_radius + 1 ) * 2 );
 
 		for ( int y = 0 ; y < h ; y++ ) {
-			int dy = ( int ) ( y( center ) - y );
+			int dy = ( int ) ( center.y - y );
 			for ( int x = 0 ; x < w ; x++ ) {
-				int dx = ( int ) ( x( center ) - x );
+				int dx = ( int ) ( center.x - x );
 				double dist = Math.sqrt( dx * dx + dy * dy );
 				if ( dist >= inner_radius && dist <= outer_radius ) {
 					double theta = Math.atan2( dy , dx );
@@ -267,7 +268,7 @@ public class ColorWheel extends Controller< ColorWheel > {
 		float s = ( float ) map( t[ 2 ] , 0f , 1f , d1 , d0 );
 		float x = _myColorResources.get( "default" ).width / 2 - ( float ) Math.cos( theta ) * s;
 		float y = _myColorResources.get( "default" ).height / 2 - ( float ) Math.sin( theta ) * s;
-		set( _myCursor , x , y );
+		_myCursor.setLocation(x,y);
 		setSaturation( t[ 1 ] );
 		// TODO resolve rounding error issue as reported here https://github.com/sojamo/controlp5/issues/21
 		isUpdateColor = true;
@@ -345,7 +346,7 @@ public class ColorWheel extends Controller< ColorWheel > {
 			theGraphics.translate( 0 , -yoff );
 			theGraphics.image( buffer , 0 , 0 );
 			theGraphics.pushMatrix( );
-			theGraphics.translate( x( _myCursor ) , y( _myCursor ) );
+			theGraphics.translate( _myCursor.x , _myCursor.y );
 			theGraphics.strokeWeight( 2 );
 			theGraphics.noFill( );
 			theGraphics.stroke( 255 , 40 );
@@ -557,7 +558,6 @@ public class ColorWheel extends Controller< ColorWheel > {
 	 * @param h value between 0 and 360
 	 * @param s value between 0 and 100
 	 * @param l) value between 0 and 100
-	 * @param alpha value between 0 and 1
 	 * @return
 	 */
 	public int HSLtoRGB( final double h , double s , double l ) {

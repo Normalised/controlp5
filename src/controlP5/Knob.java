@@ -25,6 +25,7 @@ package controlP5;
  * 
  */
 
+import controlP5.util.Point2D;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
@@ -56,7 +57,7 @@ public class Knob extends Controller< Knob > {
 	protected int viewStyle = LINE;
 	public static int autoWidth = 39;
 	public static int autoHeight = 39;
-	protected float[] autoSpacing = new float[] { 10 , 20 };
+	protected Point2D autoSpacing = new Point2D( 10 , 20 );
 
 	private float scrollSensitivity = 1.0f / resolution;
 
@@ -75,7 +76,7 @@ public class Knob extends Controller< Knob > {
 	/**
 	 * @exclude
 	 */
-	public Knob( ControlP5 theControlP5 , ControllerGroup< ? > theParent , String theName , float theMin , float theMax , float theDefaultValue , int theX , int theY , int theWidth ) {
+	public Knob( ControlP5 theControlP5 , ControllerGroup< ? > theParent , String theName , float theMin , float theMax , float theDefaultValue , float theX , float theY , int theWidth ) {
 		super( theControlP5 , theParent , theName , theX , theY , theWidth , theWidth );
 		_myValue = theDefaultValue;
 		setMin( theMin );
@@ -280,12 +281,11 @@ public class Knob extends Controller< Knob > {
 	 * @exclude {@inheritDoc}
 	 */
 	@Override @ControlP5.Invisible public void mousePressed( ) {
-		float x = x(_myParent.getAbsolutePosition( )) + x(position) + _myRadius;
-		float y = y(_myParent.getAbsolutePosition( )) + y(position) + _myRadius;
-		if ( PApplet.dist( x , y , _myControlWindow.mouseX , _myControlWindow.mouseY ) < _myRadius ) {
+		Point2D pos = _myParent.getAbsolutePosition().add(position).add(_myRadius, _myRadius);
+		if ( pos.distance(_myControlWindow.getMousePosition()) < _myRadius) {
 			isActive = true;
-			if ( PApplet.dist( x , y , _myControlWindow.mouseX , _myControlWindow.mouseY ) > ( _myRadius * 0.6 ) ) {
-				myAngle = ( PApplet.atan2( _myControlWindow.mouseY - y , _myControlWindow.mouseX - x ) - startAngle );
+			if ( pos.distance(_myControlWindow.getMousePosition()) > ( _myRadius * 0.6 ) ) {
+				myAngle = ( PApplet.atan2( _myControlWindow.mouseY - pos.y , _myControlWindow.mouseX - pos.x ) - startAngle );
 				if ( myAngle < 0 ) {
 					myAngle = TWO_PI + myAngle;
 				}

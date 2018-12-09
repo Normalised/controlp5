@@ -74,7 +74,7 @@ public class Matrix extends Controller< Matrix > {
 		theControlP5.register( theControlP5.papplet , theName , this );
 	}
 
-	public Matrix( ControlP5 theControlP5 , ControllerGroup< ? > theParent , String theName , int theCellX , int theCellY , int theX , int theY , int theWidth , int theHeight ) {
+	public Matrix( ControlP5 theControlP5 , ControllerGroup< ? > theParent , String theName , int theCellX , int theCellY , float theX , float theY , int theWidth , int theHeight ) {
 		super( theControlP5 , theParent , theName , theX , theY , theWidth , theHeight );
 		_myInterval = 100;
 		setGrid( theCellX , theCellY );
@@ -122,8 +122,8 @@ public class Matrix extends Controller< Matrix > {
 
 		if ( getIsInside( ) ) {
 			if ( isPressed ) {
-				int tX = ( int ) ( ( theApplet.mouseX - x( position ) ) / stepX );
-				int tY = ( int ) ( ( theApplet.mouseY - y( position ) ) / stepY );
+				int tX = ( int ) ( ( theApplet.mouseX - position.x ) / stepX );
+				int tY = ( int ) ( ( theApplet.mouseY - position.y ) / stepY );
 
 				if ( tX != currentX || tY != currentY ) {
 					tX = PApplet.min( PApplet.max( 0 , tX ) , _myCellX );

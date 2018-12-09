@@ -107,7 +107,7 @@ public class Textfield extends Controller< Textfield > {
 		theControlP5.register( theControlP5.papplet , theName , this );
 	}
 
-	public Textfield( ControlP5 theControlP5 , ControllerGroup< ? > theParent , String theName , String theDefaultValue , int theX , int theY , int theWidth , int theHeight ) {
+	public Textfield( ControlP5 theControlP5 , ControllerGroup< ? > theParent , String theName , String theDefaultValue , float theX , float theY , int theWidth , int theHeight ) {
 		super( theControlP5 , theParent , theName , theX , theY , theWidth , theHeight );
 
 		_myCaptionLabel = new Label( cp5 , theName , 0 , 0 , color.getCaptionLabel( ) );
@@ -262,8 +262,8 @@ public class Textfield extends Controller< Textfield > {
 		if ( isActive ) {
 			// TODO System.out.println("adjust cursor");
 		}
-		int x = ( int ) ( getControlWindow( ).mouseX - x( getAbsolutePosition( ) ) );
-		int y = ( int ) ( getControlWindow( ).mouseY - y( getAbsolutePosition( ) ) );
+//		int x = ( int ) ( getControlWindow( ).mouseX - x( getAbsolutePosition( ) ) );
+//		int y = ( int ) ( getControlWindow( ).mouseY - y( getAbsolutePosition( ) ) );
 
 		// TODO System.out.println(x + ":" + y);
 		setFocus( true );
@@ -304,7 +304,7 @@ public class Textfield extends Controller< Textfield > {
 		theGraphics.pushStyle( );
 		theGraphics.fill( color.getBackground( ) );
 		theGraphics.pushMatrix( );
-		theGraphics.translate( x( position ) , y( position ) );
+		theGraphics.translate( position.x , position.y );
 		theGraphics.rect( 0 , 0 , getWidth( ) , getHeight( ) );
 		theGraphics.noStroke( );
 

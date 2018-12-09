@@ -64,7 +64,7 @@ public class ControlGroup< T > extends ControllerGroup< T > implements ControlLi
 		theControlP5.register( theControlP5.papplet , theName , this );
 	}
 
-	public ControlGroup( ControlP5 theControlP5 , ControllerGroup< ? > theParent , String theName , int theX , int theY , int theW , int theH ) {
+	public ControlGroup( ControlP5 theControlP5 , ControllerGroup< ? > theParent , String theName , float theX , float theY , int theW , int theH ) {
 		super( theControlP5 , theParent , theName , theX , theY );
 		_myControlListener = new ArrayList< ControlListener >( );
 		_myValueLabel = new Label( cp5 , "" );

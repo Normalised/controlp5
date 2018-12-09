@@ -128,6 +128,7 @@ public interface ControlP5Constants {
 	static public final int ACTION_START_DRAG = 10;
 	static public final int ACTION_END_DRAG = 11;
 	static public final int ACTION_DOUBLE_PRESS = 12;
+	static public final int ACTION_KEY = 13;
 	static public final int ACTION_BROADCAST = 100;
 	static public final int LEFT_OUTSIDE = 10;
 	static public final int RIGHT_OUTSIDE = 11;

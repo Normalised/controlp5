@@ -46,7 +46,7 @@ package controlP5;
 		theControlP5.register( theControlP5.papplet , theName , this );
 	}
 
-	Accordion( ControlP5 theControlP5 , Tab theTab , String theName , int theX , int theY , int theW ) {
+	Accordion( ControlP5 theControlP5 , Tab theTab , String theName , float theX , float theY , int theW ) {
 		super( theControlP5 , theTab , theName , theX , theY , theW , 9 );
 		hideBar( );
 	}

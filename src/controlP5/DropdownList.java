@@ -9,15 +9,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import controlP5.util.Point2D;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.event.KeyEvent;
 
 /**
  * controlP5 is a processing gui library.
- * 
+ * <p>
  * 2006-2015 by Andreas Schlegel
- * 
+ * <p>
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
  * as published by the Free Software Foundation; either version 2.1
@@ -26,441 +27,454 @@ import processing.event.KeyEvent;
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- * 
+ * <p>
  * You should have received a copy of the GNU Lesser General
  * Public License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA
- * 
+ *
  * @author Andreas Schlegel (http://www.sojamo.de)
- * @modified ##date##
  * @version ##version##
- * 
+ * @modified ##date##
  */
 
-public class DropdownList extends Controller< DropdownList > implements ControlListener {
+public class DropdownList extends Controller<DropdownList> implements ControlListener {
 
-	private int _myType = DROPDOWN;
-	protected int _myBackgroundColor = 0x00ffffff;
-	protected int itemHeight = 13;
-	protected int barHeight = 10;
-	private float scrollSensitivity = 1;
-	private boolean isOpen = true;
-	protected List< Map< String , Object > > items;
-	protected int itemRange = 5;
-	protected int itemHover = -1;
-	private int itemIndexOffset = 0;
-	private int itemSpacing = 1;
-	private int _myDirection = PApplet.DOWN;
-	private boolean isBarVisible = true;
-	static public final int LIST = ControlP5.LIST;
-	static public final int DROPDOWN = ControlP5.DROPDOWN;
-	static public final int CHECKBOX = ControlP5.CHECKBOX; /* TODO */
-	static public final int TREE = ControlP5.TREE; /* TODO */
+    private int _myType = DROPDOWN;
+    protected int _myBackgroundColor = 0x00ffffff;
+    protected int itemHeight = 13;
+    protected int barHeight = 10;
+    private float scrollSensitivity = 1;
+    private boolean isOpen = true;
+    protected List<Map<String, Object>> items;
+    protected int itemRange = 5;
+    protected int itemHover = -1;
+    private int itemIndexOffset = 0;
+    private int itemSpacing = 1;
+    private int _myDirection = PApplet.DOWN;
+    private boolean isBarVisible = true;
+    static public final int LIST = ControlP5.LIST;
+    static public final int DROPDOWN = ControlP5.DROPDOWN;
+    static public final int CHECKBOX = ControlP5.CHECKBOX; /* TODO */
+    static public final int TREE = ControlP5.TREE; /* TODO */
 
-	public DropdownList( ControlP5 theControlP5 , String theName ) {
-		this( theControlP5 , theControlP5.getDefaultTab( ) , theName , 0 , 0 , 99 , 199 );
-		theControlP5.register( theControlP5.papplet , theName , this );
-	}
+    public DropdownList(ControlP5 theControlP5, String theName) {
+        this(theControlP5, theControlP5.getDefaultTab(), theName, 0, 0, 99, 199);
+        theControlP5.register(theControlP5.papplet, theName, this);
+    }
 
-	protected DropdownList( ControlP5 theControlP5 , ControllerGroup< ? > theGroup , String theName , int theX , int theY , int theW , int theH ) {
-		super( theControlP5 , theGroup , theName , theX , theY , theW , theH );
-		items = new ArrayList< Map< String , Object > >( );
-		updateHeight( );
-		getValueLabel( ).align( PApplet.LEFT , PApplet.CENTER );
-	}
+    protected DropdownList(ControlP5 theControlP5, ControllerGroup<?> theGroup, String theName, float theX, float theY, int theW, int theH) {
+        super(theControlP5, theGroup, theName, theX, theY, theW, theH);
+        items = new ArrayList<Map<String, Object>>();
+        updateHeight();
+        getValueLabel().align(PApplet.LEFT, PApplet.CENTER);
+    }
 
-	public boolean isOpen( ) {
-		return isOpen;
-	}
+    public boolean isOpen() {
+        return isOpen;
+    }
 
-	public DropdownList open( ) {
-		return setOpen( true );
-	}
+    public DropdownList open() {
+        return setOpen(true);
+    }
 
-	public DropdownList close( ) {
-		return setOpen( false );
-	}
+    public DropdownList close() {
+        return setOpen(false);
+    }
 
-	public DropdownList setOpen( boolean b ) {
-		isOpen = b;
-		return this;
-	}
+    public DropdownList setOpen(boolean b) {
+        isOpen = b;
+        return this;
+    }
 
-	@Override public int getHeight( ) {
-		return isOpen ? super.getHeight( ) : barHeight;
-	}
+    @Override
+    public int getHeight() {
+        return isOpen ? super.getHeight() : barHeight;
+    }
 
-	public DropdownList setType( int theType ) {
-		_myType = theType;
-		return this;
-	}
+    public DropdownList setType(int theType) {
+        _myType = theType;
+        return this;
+    }
 
-	public void setDirection( int theDirection ) {
-		_myDirection = ( theDirection == PApplet.UP ) ? PApplet.UP : PApplet.DOWN;
-	}
+    public void setDirection(int theDirection) {
+        _myDirection = (theDirection == PApplet.UP) ? PApplet.UP : PApplet.DOWN;
+    }
 
-	@Override protected boolean inside( ) {
-		/* constrain the bounds of the controller to the
+    @Override
+    protected boolean inside() {
+        /* constrain the bounds of the controller to the
 		 * dimensions of the cp5 area, required since
 		 * PGraphics as render area has been introduced. */
-		float x0 = PApplet.max( 0 , x( position ) + x( _myParent.getAbsolutePosition( ) ) );
-		float x1 = PApplet.min( cp5.pgw , x( position ) + x( _myParent.getAbsolutePosition( ) ) + getWidth( ) );
-		float y0 = PApplet.max( 0 , y( position ) + y( _myParent.getAbsolutePosition( ) ) );
-		float y1 = PApplet.min( cp5.pgh , y( position ) + y( _myParent.getAbsolutePosition( ) ) + getHeight( ) );
-		if ( y1 < y0 ) {
-			float ty = y0;
-			y0 = y1;
-			y1 = ty;
-		}
-		return ( _myControlWindow.mouseX > x0 && _myControlWindow.mouseX < x1 && _myControlWindow.mouseY > ( y1 < y0 ? y1 : y0 ) && _myControlWindow.mouseY < ( y0 < y1 ? y1 : y0 ) );
-	}
+        float x0 = PApplet.max(0, position.x + _myParent.getAbsolutePosition().x);
+        float x1 = PApplet.min(cp5.pgw, position.x + _myParent.getAbsolutePosition().x + getWidth());
+        float y0 = PApplet.max(0, position.y + _myParent.getAbsolutePosition().y);
+        float y1 = PApplet.min(cp5.pgh, position.y + _myParent.getAbsolutePosition().y + getHeight());
 
-	@Override protected void onRelease( ) {
-		if ( !isDragged ) {
-			if ( getPointer( ).y( ) >= 0 && getPointer( ).y( ) <= barHeight ) {
-				setOpen( !isOpen( ) );
-			} else if ( isOpen ) {
+        if (y1 < y0) {
+            float ty = y0;
+            y0 = y1;
+            y1 = ty;
+        }
+        return (_myControlWindow.mouseX > x0 && _myControlWindow.mouseX < x1 && _myControlWindow.mouseY > (y1 < y0 ? y1 : y0) && _myControlWindow.mouseY < (y0 < y1 ? y1 : y0));
+    }
 
-				double n = Math.floor( ( getPointer( ).y( ) - barHeight ) / itemHeight );
+    @Override
+    protected void onRelease() {
+        if (!isDragged) {
+            if (getPointer().y() >= 0 && getPointer().y() <= barHeight) {
+                setOpen(!isOpen());
+            } else if (isOpen) {
 
-				// n += itemRange; /* UP */
-				int index = ( int ) n + itemIndexOffset;
+                double n = Math.floor((getPointer().y() - barHeight) / itemHeight);
 
-				if (index < items.size()) {
-					Map m = items.get( index );
-	
-					switch ( _myType ) {
-					case ( LIST ):
-						setValue( index );
-						for ( Object o : items ) {
-							( ( Map ) o ).put( "state" , false );
-						}
-						m.put( "state" , !ControlP5.b( m.get( "state" ) ) );
-						break;
-					case ( DROPDOWN ):
-						setValue( index );
-						setOpen( false );
-						getCaptionLabel( ).setText( ( m.get( "text" ).toString( ) ) );
-						break;
-					case ( CHECKBOX ):
-						m.put( "state" , !ControlP5.b( m.get( "state" ) ) );
-						break;
-					}
-				}
+                // n += itemRange; /* UP */
+                int index = (int) n + itemIndexOffset;
 
-			}
-		}
-	}
+                if (index < items.size()) {
+                    Map m = items.get(index);
 
-	@Override protected void onDrag( ) {
-		scroll( getPointer( ).dy( ) );
-	}
+                    switch (_myType) {
+                        case (LIST):
+                            setValue(index);
+                            for (Object o : items) {
+                                ((Map) o).put("state", false);
+                            }
+                            m.put("state", !ControlP5.b(m.get("state")));
+                            break;
+                        case (DROPDOWN):
+                            setValue(index);
+                            setOpen(false);
+                            getCaptionLabel().setText((m.get("text").toString()));
+                            break;
+                        case (CHECKBOX):
+                            m.put("state", !ControlP5.b(m.get("state")));
+                            break;
+                    }
+                }
 
-	@Override protected void onScroll( int theValue ) {
-		scroll( theValue );
-	}
+            }
+        }
+    }
 
-	private void scroll( int theValue ) {
-		if ( isOpen ) {
-			itemIndexOffset += theValue;
-			itemIndexOffset = ( int ) ( Math.floor( Math.max( 0 , Math.min( itemIndexOffset , items.size( ) - itemRange ) ) ) );
-			itemHover = -2;
-		}
-	}
+    @Override
+    protected void onDrag() {
+        scroll(getPointer().dy());
+    }
 
-	@Override protected void onLeave( ) {
-		itemHover = -1;
-	}
+    @Override
+    protected void onScroll(int theValue) {
+        scroll(theValue);
+    }
 
-	private void updateHover( ) {
-		if ( getPointer( ).y( ) > barHeight ) {
-			double n = Math.floor( ( getPointer( ).y( ) - barHeight ) / itemHeight );
-			itemHover = ( int ) ( itemIndexOffset + n );
-		} else {
-			itemHover = -1;
-		}
-	}
+    private void scroll(int theValue) {
+        if (isOpen) {
+            itemIndexOffset += theValue;
+            itemIndexOffset = (int) (Math.floor(Math.max(0, Math.min(itemIndexOffset, items.size() - itemRange))));
+            itemHover = -2;
+        }
+    }
 
-	@Override protected void onEnter( ) {
-		updateHover( );
-	}
+    @Override
+    protected void onLeave() {
+        itemHover = -1;
+    }
 
-	@Override protected void onMove( ) {
-		updateHover( );
-	}
+    private void updateHover() {
+        if (getPointer().y() > barHeight) {
+            double n = Math.floor((getPointer().y() - barHeight) / itemHeight);
+            itemHover = (int) (itemIndexOffset + n);
+        } else {
+            itemHover = -1;
+        }
+    }
 
-	@Override protected void onEndDrag( ) {
-		updateHover( );
-	}
+    @Override
+    protected void onEnter() {
+        updateHover();
+    }
 
-	private int updateHeight( ) {
-		itemRange = ( PApplet.abs( getHeight( ) ) - ( isBarVisible( ) ? barHeight : 0 ) ) / itemHeight;
-		return itemHeight * ( items.size( ) < itemRange ? items.size( ) : itemRange );
-	}
+    @Override
+    protected void onMove() {
+        updateHover();
+    }
 
-	public DropdownList setItemHeight( int theHeight ) {
-		itemHeight = theHeight;
-		updateHeight( );
-		return this;
-	}
+    @Override
+    protected void onEndDrag() {
+        updateHover();
+    }
 
-	public DropdownList setBarHeight( int theHeight ) {
-		barHeight = theHeight;
-		updateHeight( );
-		return this;
-	}
+    private int updateHeight() {
+        itemRange = (PApplet.abs(getHeight()) - (isBarVisible() ? barHeight : 0)) / itemHeight;
+        return itemHeight * (items.size() < itemRange ? items.size() : itemRange);
+    }
 
-	public int getBarHeight( ) {
-		return barHeight;
-	}
+    public DropdownList setItemHeight(int theHeight) {
+        itemHeight = theHeight;
+        updateHeight();
+        return this;
+    }
 
-	public DropdownList setScrollSensitivity( float theSensitivity ) {
-		scrollSensitivity = theSensitivity;
-		return this;
-	}
+    public DropdownList setBarHeight(int theHeight) {
+        barHeight = theHeight;
+        updateHeight();
+        return this;
+    }
 
-	public DropdownList setBarVisible( boolean b ) {
-		isBarVisible = b;
-		updateHeight( );
-		return this;
-	}
+    public int getBarHeight() {
+        return barHeight;
+    }
 
-	public boolean isBarVisible( ) {
-		return isBarVisible;
-	}
+    public DropdownList setScrollSensitivity(float theSensitivity) {
+        scrollSensitivity = theSensitivity;
+        return this;
+    }
 
-	private Map< String , Object > getDefaultItemMap( String theName , Object theValue ) {
-		Map< String , Object > item = new HashMap< String , Object >( );
-		item.put( "name" , theName );
-		item.put( "text" , theName );
-		item.put( "value" , theValue );
-		item.put( "color" , getColor( ) );
-		item.put( "view" , new CDrawable( ) {
-			@Override public void draw( PGraphics theGraphics ) {
-			}
+    public DropdownList setBarVisible(boolean b) {
+        isBarVisible = b;
+        updateHeight();
+        return this;
+    }
 
-		} );
-		item.put( "state" , false );
-		return item;
-	}
+    public boolean isBarVisible() {
+        return isBarVisible;
+    }
 
-	public DropdownList addItem( String theName , Object theValue ) {
-		Map< String , Object > item = getDefaultItemMap( theName , theValue );
-		items.add( item );
-		return this;
-	}
+    private Map<String, Object> getDefaultItemMap(String theName, Object theValue) {
+        Map<String, Object> item = new HashMap<String, Object>();
+        item.put("name", theName);
+        item.put("text", theName);
+        item.put("value", theValue);
+        item.put("color", getColor());
+        item.put("view", new CDrawable() {
+            @Override
+            public void draw(PGraphics theGraphics) {
+            }
 
-	public DropdownList addItems( String[] theItems ) {
-		addItems( Arrays.asList( theItems ) );
-		return this;
-	}
+        });
+        item.put("state", false);
+        return item;
+    }
 
-	public DropdownList addItems( List< String > theItems ) {
-		for ( int i = 0 ; i < theItems.size( ) ; i++ ) {
-			addItem( theItems.get( i ).toString( ) , i );
-		}
-		return this;
-	}
+    public DropdownList addItem(String theName, Object theValue) {
+        Map<String, Object> item = getDefaultItemMap(theName, theValue);
+        items.add(item);
+        return this;
+    }
 
-	public DropdownList addItems( Map< String , Object > theItems ) {
-		for ( Map.Entry< String , Object > item : theItems.entrySet( ) ) {
-			addItem( item.getKey( ) , item.getValue( ) );
-		}
-		return this;
-	}
+    public DropdownList addItems(String[] theItems) {
+        addItems(Arrays.asList(theItems));
+        return this;
+    }
 
-	public DropdownList setItems( String[] theItems ) {
-		setItems( Arrays.asList( theItems ) );
-		return this;
-	}
+    public DropdownList addItems(List<String> theItems) {
+        for (int i = 0; i < theItems.size(); i++) {
+            addItem(theItems.get(i).toString(), i);
+        }
+        return this;
+    }
 
-	public DropdownList setItems( List< String > theItems ) {
-		items.clear( );
-		return addItems( theItems );
-	}
+    public DropdownList addItems(Map<String, Object> theItems) {
+        for (Map.Entry<String, Object> item : theItems.entrySet()) {
+            addItem(item.getKey(), item.getValue());
+        }
+        return this;
+    }
 
-	public DropdownList setItems( Map< String , Object > theItems ) {
-		items.clear( );
-		return addItems( theItems );
-	}
+    public DropdownList setItems(String[] theItems) {
+        setItems(Arrays.asList(theItems));
+        return this;
+    }
 
-	public DropdownList removeItems( List< String > theItems ) {
-		for ( String s : theItems ) {
-			removeItem( s );
-		}
-		return this;
-	}
+    public DropdownList setItems(List<String> theItems) {
+        items.clear();
+        return addItems(theItems);
+    }
 
-	public DropdownList removeItem( String theName ) {
-		if ( theName != null ) {
+    public DropdownList setItems(Map<String, Object> theItems) {
+        items.clear();
+        return addItems(theItems);
+    }
 
-			List l = new ArrayList( );
-			for ( Map m : items ) {
-				if ( theName.equals( m.get( "name" ) ) ) {
-					l.add( m );
-				}
-			}
-			items.removeAll( l );
-		}
-		return this;
-	}
+    public DropdownList removeItems(List<String> theItems) {
+        for (String s : theItems) {
+            removeItem(s);
+        }
+        return this;
+    }
 
-	public void updateItemIndexOffset( ) {
-		int m1 = items.size( ) > itemRange ? ( itemIndexOffset + itemRange ) : items.size( );
-		int n = ( m1 - items.size( ) );
-		if ( n >= 0 ) {
-			itemIndexOffset -= n;
-		}
-	}
+    public DropdownList removeItem(String theName) {
+        if (theName != null) {
 
-	public Map< String , Object > getItem( int theIndex ) {
-		return items.get( theIndex );
-	}
+            List l = new ArrayList();
+            for (Map m : items) {
+                if (theName.equals(m.get("name"))) {
+                    l.add(m);
+                }
+            }
+            items.removeAll(l);
+        }
+        return this;
+    }
 
-	public Map< String , Object > getItem( String theName ) {
-		if ( theName != null ) {
-			for ( Map< String , Object > o : items ) {
-				if ( theName.equals( o.get( "name" ) ) ) {
-					return o;
-				}
-			}
-		}
-		return Collections.EMPTY_MAP;
-	}
+    public void updateItemIndexOffset() {
+        int m1 = items.size() > itemRange ? (itemIndexOffset + itemRange) : items.size();
+        int n = (m1 - items.size());
+        if (n >= 0) {
+            itemIndexOffset -= n;
+        }
+    }
 
-	public List getItems( ) {
-		return Collections.unmodifiableList( items );
-	}
+    public Map<String, Object> getItem(int theIndex) {
+        return items.get(theIndex);
+    }
 
-	public DropdownList clear( ) {
-		for ( int i = items.size( ) - 1 ; i >= 0 ; i-- ) {
-			items.remove( i );
-		}
-		items.clear( );
-		itemIndexOffset = 0;
-		return this;
-	}
+    public Map<String, Object> getItem(String theName) {
+        if (theName != null) {
+            for (Map<String, Object> o : items) {
+                if (theName.equals(o.get("name"))) {
+                    return o;
+                }
+            }
+        }
+        return Collections.EMPTY_MAP;
+    }
 
-	@Override public void controlEvent( ControlEvent theEvent ) {
-		// TODO Auto-generated method stub
-	}
+    public List getItems() {
+        return Collections.unmodifiableList(items);
+    }
 
-	public DropdownList setBackgroundColor( int theColor ) {
-		_myBackgroundColor = theColor;
-		return this;
-	}
+    public DropdownList clear() {
+        for (int i = items.size() - 1; i >= 0; i--) {
+            items.remove(i);
+        }
+        items.clear();
+        itemIndexOffset = 0;
+        return this;
+    }
 
-	public int getBackgroundColor( ) {
-		return _myBackgroundColor;
-	}
+    @Override
+    public void controlEvent(ControlEvent theEvent) {
+        // TODO Auto-generated method stub
+    }
 
-	@Override @ControlP5.Invisible public DropdownList updateDisplayMode( int theMode ) {
-		_myDisplayMode = theMode;
-		switch ( theMode ) {
-		case ( DEFAULT ):
-			_myControllerView = new DropdownListView( );
-			break;
-		case ( IMAGE ):
-		case ( SPRITE ):
-		case ( CUSTOM ):
-		default:
-			break;
-		}
-		return this;
-	}
+    public DropdownList setBackgroundColor(int theColor) {
+        _myBackgroundColor = theColor;
+        return this;
+    }
 
-	static public class DropdownListView implements ControllerView< DropdownList > {
+    public int getBackgroundColor() {
+        return _myBackgroundColor;
+    }
 
-		public void display( PGraphics g , DropdownList c ) {
+    @Override
+    @ControlP5.Invisible
+    public DropdownList updateDisplayMode(int theMode) {
+        _myDisplayMode = theMode;
+        switch (theMode) {
+            case (DEFAULT):
+                _myControllerView = new DropdownListView();
+                break;
+            case (IMAGE):
+            case (SPRITE):
+            case (CUSTOM):
+            default:
+                break;
+        }
+        return this;
+    }
 
-			// setHeight( -200 ); /* UP */
+    static public class DropdownListView implements ControllerView<DropdownList> {
 
-			g.noStroke( );
+        public void display(PGraphics g, DropdownList c) {
 
-			if ( c.isBarVisible( ) ) {
-				boolean b = c.itemHover == -1 && c.isInside && !c.isDragged;
-				g.fill( b ? c.getColor( ).getForeground( ) : c.getColor( ).getBackground( ) );
-				g.rect( 0 , 0 , c.getWidth( ) , c.barHeight );
-				g.pushMatrix( );
-				g.translate( c.getWidth( ) - 8 , c.barHeight / 2 - 2 );
-				g.fill( c.getColor( ).getCaptionLabel( ) );
-				if ( c.isOpen( ) ) {
-					g.triangle( -3 , 0 , 3 , 0 , 0 , 3 );
-				} else {
-					g.triangle( -3 , 3 , 3 , 3 , 0 , 0 );
-				}
-				g.popMatrix( );
+            // setHeight( -200 ); /* UP */
 
-				c.getCaptionLabel( ).draw( g , 4 , c.barHeight / 2 );
-			}
+            g.noStroke();
 
-			if ( c.isOpen( ) ) {
-				int bar = ( c.isBarVisible( ) ? c.barHeight : 0 );
-				int h = ( ( c.updateHeight( ) ) );
-				g.pushMatrix( );
-				// g.translate( 0 , - ( h + bar +
-				// c.itemSpacing ) ); /* UP */
-				g.fill( c.getBackgroundColor( ) );
-				g.rect( 0 , bar , c.getWidth( ) , h );
-				g.pushMatrix( );
-				g.translate( 0 , ( bar == 0 ? 0 : ( c.barHeight + c.itemSpacing ) ) );
+            if (c.isBarVisible()) {
+                boolean b = c.itemHover == -1 && c.isInside && !c.isDragged;
+                g.fill(b ? c.getColor().getForeground() : c.getColor().getBackground());
+                g.rect(0, 0, c.getWidth(), c.barHeight);
+                g.pushMatrix();
+                g.translate(c.getWidth() - 8, c.barHeight / 2 - 2);
+                g.fill(c.getColor().getCaptionLabel());
+                if (c.isOpen()) {
+                    g.triangle(-3, 0, 3, 0, 0, 3);
+                } else {
+                    g.triangle(-3, 3, 3, 3, 0, 0);
+                }
+                g.popMatrix();
+
+                c.getCaptionLabel().draw(g, 4, c.barHeight / 2);
+            }
+
+            if (c.isOpen()) {
+                int bar = (c.isBarVisible() ? c.barHeight : 0);
+                int h = ((c.updateHeight()));
+                g.pushMatrix();
+                // g.translate( 0 , - ( h + bar +
+                // c.itemSpacing ) ); /* UP */
+                g.fill(c.getBackgroundColor());
+                g.rect(0, bar, c.getWidth(), h);
+                g.pushMatrix();
+                g.translate(0, (bar == 0 ? 0 : (c.barHeight + c.itemSpacing)));
 				/* draw visible items */
-				c.updateItemIndexOffset( );
-				int m0 = c.itemIndexOffset;
-				int m1 = c.items.size( ) > c.itemRange ? ( c.itemIndexOffset + c.itemRange ) : c.items.size( );
-				for ( int i = m0 ; i < m1 ; i++ ) {
-					Map< String , Object > item = c.items.get( i );
-					CColor color = ( CColor ) item.get( "color" );
-					g.fill( ( b( item.get( "state" ) ) ) ? color.getActive( ) : ( i == c.itemHover ) ? ( c.isMousePressed ? color.getActive( ) : color.getForeground( ) ) : color.getBackground( ) );
-					g.rect( 0 , 0 , c.getWidth( ) , c.itemHeight - 1 );
-					c.getValueLabel( ).set( item.get( "text" ).toString( ) ).draw( g , 4 , c.itemHeight / 2 );
-					g.translate( 0 , c.itemHeight );
-				}
-				g.popMatrix( );
+                c.updateItemIndexOffset();
+                int m0 = c.itemIndexOffset;
+                int m1 = c.items.size() > c.itemRange ? (c.itemIndexOffset + c.itemRange) : c.items.size();
+                for (int i = m0; i < m1; i++) {
+                    Map<String, Object> item = c.items.get(i);
+                    CColor color = (CColor) item.get("color");
+                    g.fill((b(item.get("state"))) ? color.getActive() : (i == c.itemHover) ? (c.isMousePressed ? color.getActive() : color.getForeground()) : color.getBackground());
+                    g.rect(0, 0, c.getWidth(), c.itemHeight - 1);
+                    c.getValueLabel().set(item.get("text").toString()).draw(g, 4, c.itemHeight / 2);
+                    g.translate(0, c.itemHeight);
+                }
+                g.popMatrix();
 
-				if ( c.isInside ) {
-					int m = c.items.size( ) - c.itemRange;
-					if ( m > 0 ) {
-						g.fill( c.getColor( ).getCaptionLabel( ) );
-						g.pushMatrix( );
-						int s = 4; /* spacing */
-						int s2 = s / 2;
-						g.translate( c.getWidth( ) - s , c.barHeight );
-						int len = ( int ) PApplet.map( ( float ) Math.log( m * 10 ) , 0 , 10 , h , 0 );
-						int pos = ( int ) ( PApplet.map( c.itemIndexOffset , 0 , m , s2 , h - len - s2 ) );
-						g.rect( 0 , pos , s2 , len );
-						g.popMatrix( );
-					}
-				}
-				g.popMatrix( );
-			}
+                if (c.isInside) {
+                    int m = c.items.size() - c.itemRange;
+                    if (m > 0) {
+                        g.fill(c.getColor().getCaptionLabel());
+                        g.pushMatrix();
+                        int s = 4; /* spacing */
+                        int s2 = s / 2;
+                        g.translate(c.getWidth() - s, c.barHeight);
+                        int len = (int) PApplet.map((float) Math.log(m * 10), 0, 10, h, 0);
+                        int pos = (int) (PApplet.map(c.itemIndexOffset, 0, m, s2, h - len - s2));
+                        g.rect(0, pos, s2, len);
+                        g.popMatrix();
+                    }
+                }
+                g.popMatrix();
+            }
 
-		}
+        }
 
-	}
+    }
 
-	public void keyEvent( KeyEvent theKeyEvent ) {
-		if ( isInside && theKeyEvent.getAction( ) == KeyEvent.PRESS ) {
-			switch ( theKeyEvent.getKeyCode( ) ) {
-			case ( ControlP5.UP ):
-				scroll( theKeyEvent.isAltDown( ) ? -itemIndexOffset : theKeyEvent.isShiftDown( ) ? -10 : -1 );
-				updateHover( );
-				break;
-			case ( ControlP5.DOWN ):
-				scroll( theKeyEvent.isAltDown( ) ? items.size( ) - itemRange : theKeyEvent.isShiftDown( ) ? 10 : 1 );
-				updateHover( );
-				break;
-			case ( ControlP5.LEFT ):
-				break;
-			case ( ControlP5.RIGHT ):
-				break;
-			case ( ControlP5.ENTER ):
-				onRelease( );
-				break;
-			}
-		}
-	}
+    public void keyEvent(KeyEvent theKeyEvent) {
+        if (isInside && theKeyEvent.getAction() == KeyEvent.PRESS) {
+            switch (theKeyEvent.getKeyCode()) {
+                case (ControlP5.UP):
+                    scroll(theKeyEvent.isAltDown() ? -itemIndexOffset : theKeyEvent.isShiftDown() ? -10 : -1);
+                    updateHover();
+                    break;
+                case (ControlP5.DOWN):
+                    scroll(theKeyEvent.isAltDown() ? items.size() - itemRange : theKeyEvent.isShiftDown() ? 10 : 1);
+                    updateHover();
+                    break;
+                case (ControlP5.LEFT):
+                    break;
+                case (ControlP5.RIGHT):
+                    break;
+                case (ControlP5.ENTER):
+                    onRelease();
+                    break;
+            }
+        }
+    }
 	/* TODO keycontrol: arrows, return dragging moving items
 	 * sorting custom view custom event types */
 }
