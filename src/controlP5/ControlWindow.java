@@ -196,7 +196,6 @@ public final class ControlWindow {
      * Sets the position of the tab bar which is set to 0,0
      * by default. to move the tabs to y-position 100, use
      * cp5.getWindow().setPositionOfTabs(0,100);
-     *
      */
 
     public ControlWindow setPositionOfTabs(int theX, int theY) {
@@ -628,8 +627,8 @@ public final class ControlWindow {
      * Adds a custom context to a ControlWindow. Use a
      * custom class which implements the CDrawable interface
      *
-     * @see controlP5.CDrawable
      * @param theDrawable CDrawable
+     * @see controlP5.CDrawable
      */
     public ControlWindow setContext(CDrawable theDrawable) {
         _myDrawable = theDrawable;
@@ -710,8 +709,8 @@ public final class ControlWindow {
     }
 
     /**
-     * @exclude
      * @param theKeyEvent KeyEvent
+     * @exclude
      */
     public void handleKeyEvent(KeyEvent theKeyEvent) {
         for (int i = 0; i < _myTabs.size(); i++) {

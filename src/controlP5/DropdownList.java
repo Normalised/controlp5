@@ -104,7 +104,7 @@ public class DropdownList extends Controller<DropdownList> implements ControlLis
     @Override
     protected boolean inside() {
         /* constrain the bounds of the controller to the
-		 * dimensions of the cp5 area, required since
+         * dimensions of the cp5 area, required since
 		 * PGraphics as render area has been introduced. */
         float x0 = PApplet.max(0, position.x + _myParent.getAbsolutePosition().x);
         float x1 = PApplet.min(cp5.pgw, position.x + _myParent.getAbsolutePosition().x + getWidth());

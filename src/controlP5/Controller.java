@@ -56,6 +56,7 @@ import processing.event.KeyEvent;
  * controller to either a method or a field within your program.</li>
  * </ul>
  *
+ * @example use/ControlP5basics
  * @see controlP5.Bang
  * @see controlP5.Button
  * @see controlP5.Knob
@@ -72,8 +73,6 @@ import processing.event.KeyEvent;
  * @see controlP5.ControlGroup
  * @see controlP5.ControlBehavior
  * @see controlP5.ControlEvent
- *
- * @example use/ControlP5basics
  */
 public abstract class Controller<T> implements ControllerInterface<T>, CDrawable, ControlP5Constants {
 
@@ -118,7 +117,7 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     protected int _myDecimalPoints = 2;
     public static int autoWidth = 49;
     public static int autoHeight = 19;
-    public static Point2D autoSpacing = new Point2D(10,10);
+    public static Point2D autoSpacing = new Point2D(10, 10);
     protected boolean[] availableImages = new boolean[4];
     protected PImage[] images = new PImage[4];
     protected ControllerView<T> _myControllerView;
@@ -142,9 +141,9 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     /**
      * Convenience constructor to extend Controller.
      *
-     * @example use/ControlP5extendController
      * @param theControlP5
      * @param theName
+     * @example use/ControlP5extendController
      */
     public Controller(ControlP5 theControlP5, String theName) {
         this(theControlP5, theControlP5.getDefaultTab(), theName, 0, 0, autoWidth, autoHeight);
@@ -288,9 +287,9 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
      * with setBehavior you can add a ControlBehavior to a controller. A ControlBehavior can be used to e.g.
      * automatically change state, function, position, etc.
      *
-     * @example ControlP5behavior
      * @param theBehavior ControlBehavior
      * @return Controller
+     * @example ControlP5behavior
      */
     public T setBehavior(final ControlBehavior theBehavior) {
         isBehavior = true;
@@ -687,9 +686,8 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     /**
      * returns true or false for the current listening status. by default it is set to false
      *
-     * @see controlP5.Controller#listen(boolean)
-     *
      * @return boolean
+     * @see controlP5.Controller#listen(boolean)
      */
     public boolean isListening() {
         return listening;
@@ -732,9 +730,9 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
      * of default matrix operations and will call the display function of the current ControllerView object active for
      * this particular controller.
      *
+     * @param theGraphics PGraphics
      * @exclude
      * @see controlP5.ControllerView
-     * @param theGraphics PGraphics
      */
     @ControlP5.Invisible
     @Override
@@ -886,7 +884,6 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     }
 
     /**
-     *
      * @param theControlWindow
      * @param theTabName
      * @return Controller
@@ -921,7 +918,6 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     }
 
     /**
-     *
      * @param theGroup
      * @return Controller
      */
@@ -1052,7 +1048,7 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
      * @return boolean
      */
     protected boolean inside() {
-		/* constrain the bounds of the controller to the dimensions of the cp5 area, required since PGraphics as render
+        /* constrain the bounds of the controller to the dimensions of the cp5 area, required since PGraphics as render
 		 * area has been introduced. */
         float x0 = PApplet.max(0, position.x + _myParent.getAbsolutePosition().x);
         float x1 = PApplet.min(cp5.pgw, position.x + _myParent.getAbsolutePosition().x + getWidth());
@@ -1247,7 +1243,6 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     }
 
     /**
-     *
      * @param theEvent KeyEvent
      */
     @ControlP5.Invisible
@@ -1282,7 +1277,6 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     }
 
     /**
-     *
      * @return List<ControllerPlug>
      */
     public List<ControllerPlug> getControllerPlugList() {
@@ -1322,7 +1316,6 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     }
 
     /**
-     *
      * @param theObjects
      * @param theName
      * @return Controller
@@ -1401,9 +1394,9 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     }
 
     /**
+     * @return float
      * @see Controller#getStringValue()
      * @see Controller#getArrayValue()
-     * @return float
      */
     @ControlP5.Layout
     public float getValue() {
@@ -1421,10 +1414,9 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     }
 
     /**
+     * @return String
      * @see Controller#getValue()
      * @see Controller#getArrayValue()
-     *
-     * @return String
      */
     @ControlP5.Layout
     public String getStringValue() {
@@ -1434,10 +1426,9 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     /**
      * returns the current float array value of a controller.
      *
+     * @return float[]
      * @see Controller#getValue()
      * @see Controller#getStringValue()
-     *
-     * @return float[]
      */
     @ControlP5.Layout
     public float[] getArrayValue() {
@@ -1457,7 +1448,6 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     }
 
     /**
-     *
      * @param theArray
      * @return Controller
      */
@@ -1468,7 +1458,6 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     }
 
     /**
-     *
      * @param theIndex
      * @param theValue
      * @return Controller
@@ -1498,9 +1487,9 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
      * updates the value of the controller without having to set the value explicitly. update does not visually update
      * the controller. the updating status can be set with setUpdate(true/false) and checked with isUpdate().
      *
+     * @return Controller
      * @see Controller#setUpdate(boolean)
      * @see Controller#isUpdate()
-     * @return Controller
      */
     public T update() {
         return me;
@@ -1509,11 +1498,10 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     /**
      * disables the update function for a controller.
      *
-     * @see Controller#update()
-     * @see Controller#isUpdate()
-     *
      * @param theFlag boolean
      * @return Controller
+     * @see Controller#update()
+     * @see Controller#isUpdate()
      */
     @Override
     public T setUpdate(final boolean theFlag) {
@@ -1524,10 +1512,9 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     /**
      * enables the update function for a controller.
      *
+     * @return boolean
      * @see Controller#update()
      * @see Controller#setUpdate(boolean)
-     *
-     * @return boolean
      */
     public boolean isUpdate() {
         return isUpdate;
@@ -1582,9 +1569,9 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     }
 
     /**
-     * @see controlP5.ControlListener
      * @param theListener ControlListener
      * @return Controller
+     * @see controlP5.ControlListener
      */
     public T addListener(final ControlListener theListener) {
         _myControlListener.add(theListener);
@@ -1592,9 +1579,9 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     }
 
     /**
-     * @see controlP5.ControlListener
      * @param theListener ControlListener
      * @return Controller
+     * @see controlP5.ControlListener
      */
     public T removeListener(final ControlListener theListener) {
         _myControlListener.remove(theListener);
@@ -1609,9 +1596,9 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     }
 
     /**
-     * @see CallbackListener
      * @param theListener
      * @return Controller
+     * @see CallbackListener
      */
     public T addCallback(CallbackListener theListener) {
         cp5.addCallback(theListener, this);
@@ -1619,9 +1606,9 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     }
 
     /**
-     * @see CallbackListener
      * @param theListener
      * @return Controller
+     * @see CallbackListener
      */
     public T removeCallback(CallbackListener theListener) {
         cp5.removeCallback(theListener);
@@ -1864,9 +1851,9 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
      * use setDisplay to customize your controller look. A new controller-display class required to implement interface
      * ControllerView. By default the display mode will be set to CUSTOM when setting a new display.
      *
-     * @see controlP5.ControllerView
      * @param theView
      * @return Controller
+     * @see controlP5.ControllerView
      */
     public T setView(ControllerView<T> theView) {
         setView(theView, CUSTOM);
@@ -1883,8 +1870,8 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     }
 
     /**
-     * @see controlP5.Label
      * @return Label
+     * @see controlP5.Label
      */
     @ControlP5.Layout
     public Label getCaptionLabel() {
@@ -2119,8 +2106,8 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     }
 
     /**
-     * @exclude
      * @return boolean
+     * @exclude
      */
     @ControlP5.Invisible
     public boolean isUserInteraction() {
@@ -2140,8 +2127,8 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     }
 
     /**
-     * @see controlP5.Controller#registerTooltip(String)
      * @return Controller
+     * @see controlP5.Controller#registerTooltip(String)
      */
     public T unregisterTooltip() {
         cp5.getTooltip().unregister(this);
@@ -2243,8 +2230,8 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     }
 
     /**
-     * @exclude
      * @return String
+     * @exclude
      */
     public String getInfo() {
         return "[ type:\tController" + "\nname:\t" + _myName + "\n" + "label:\t" + _myCaptionLabel.getText() + "\n" + "id:\t" + _myId + "\n" + "value:\t" + getValue() + "\n" + "arrayvalue:\t" + CP.arrayToString(_myArrayValue) + "\n" + "position:\t"

@@ -2,9 +2,9 @@ package controlP5;
 
 /**
  * controlP5 is a processing gui library.
- *
+ * <p>
  * 2006-2015 by Andreas Schlegel
- *
+ * <p>
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
  * as published by the Free Software Foundation; either version 2.1
@@ -13,7 +13,7 @@ package controlP5;
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General
  * Public License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
@@ -22,8 +22,8 @@ package controlP5;
  * @author Andreas Schlegel (http://www.sojamo.de)
  * @modified ##date##
  * @version ##version##
- *
  */
+
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
@@ -32,70 +32,70 @@ import processing.core.PGraphics;
  */
 public class TickMark implements CDrawable {
 
-	protected Controller< ? > _myParent;
+    protected Controller<?> _myParent;
 
-	protected int _myLen = 4;
-	protected int _myDistance = _myLen;
+    protected int _myLen = 4;
+    protected int _myDistance = _myLen;
 
-	protected Label _myLabel;
+    protected Label _myLabel;
 
-	protected boolean isLabel;
+    protected boolean isLabel;
 
-	public TickMark( Controller< ? > theController ) {
-		_myParent = theController;
-	}
+    public TickMark(Controller<?> theController) {
+        _myParent = theController;
+    }
 
-	public void draw( PGraphics theGraphics ) {
-		draw( theGraphics , ControlP5Constants.HORIZONTAL );
-	}
+    public void draw(PGraphics theGraphics) {
+        draw(theGraphics, ControlP5Constants.HORIZONTAL);
+    }
 
-	public void draw( PGraphics theGraphics , int theDirection ) {
-		theGraphics.pushMatrix( );
-		switch ( theDirection ) {
-		case ( ControlP5Constants.HORIZONTAL ):
-			theGraphics.translate( 0 , _myDistance );
-			theGraphics.rect( 0 , 0 , 1 , _myLen );
-			if ( isLabel ) {
-				_myLabel.draw( theGraphics , 0 , _myLen + 4 , _myParent );
-			}
-			break;
-		case ( ControlP5Constants.VERTICAL ):
-			theGraphics.translate( -_myDistance - _myLen , 0 );
-			theGraphics.rect( 0 , 0 , _myLen , 1 );
-			if ( isLabel ) {
+    public void draw(PGraphics theGraphics, int theDirection) {
+        theGraphics.pushMatrix();
+        switch (theDirection) {
+            case (ControlP5Constants.HORIZONTAL):
+                theGraphics.translate(0, _myDistance);
+                theGraphics.rect(0, 0, 1, _myLen);
+                if (isLabel) {
+                    _myLabel.draw(theGraphics, 0, _myLen + 4, _myParent);
+                }
+                break;
+            case (ControlP5Constants.VERTICAL):
+                theGraphics.translate(-_myDistance - _myLen, 0);
+                theGraphics.rect(0, 0, _myLen, 1);
+                if (isLabel) {
 
-				_myLabel.draw( theGraphics , -_myLabel.getWidth( ) , 0 , _myParent );
-			}
-			break;
-		}
+                    _myLabel.draw(theGraphics, -_myLabel.getWidth(), 0, _myParent);
+                }
+                break;
+        }
 
-		theGraphics.popMatrix( );
-	}
+        theGraphics.popMatrix();
+    }
 
-	public void setLength( int theLength ) {
-		_myLen = theLength;
-	}
+    public void setLength(int theLength) {
+        _myLen = theLength;
+    }
 
-	public void setDistance( int theDistance) {
-		_myDistance = theDistance;
-	}
+    public void setDistance(int theDistance) {
+        _myDistance = theDistance;
+    }
 
-	public Label setLabel( String theLabeltext ) {
+    public Label setLabel(String theLabeltext) {
 
-		if ( _myLabel == null ) {
-			_myLabel = new Label( _myParent.cp5 , theLabeltext );
-			isLabel = true;
-		} else {
-			_myLabel.set( theLabeltext );
-		}
-		return _myLabel;
-	}
+        if (_myLabel == null) {
+            _myLabel = new Label(_myParent.cp5, theLabeltext);
+            isLabel = true;
+        } else {
+            _myLabel.set(theLabeltext);
+        }
+        return _myLabel;
+    }
 
-	public Label getLabel( ) {
-		if ( _myLabel == null ) {
-			setLabel( "?" );
-		}
-		return _myLabel;
-	}
+    public Label getLabel() {
+        if (_myLabel == null) {
+            setLabel("?");
+        }
+        return _myLabel;
+    }
 
 }

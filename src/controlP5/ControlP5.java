@@ -63,8 +63,8 @@ import controlP5.ControlWindow.Pointer;
  * ControlP5Base class.
  * </p>
  *
- * @see controlP5.ControlP5Base
  * @example use/ControlP5basics
+ * @see controlP5.ControlP5Base
  */
 public class ControlP5 extends ControlP5Base {
 
@@ -333,7 +333,6 @@ public class ControlP5 extends ControlP5Base {
     }
 
     /**
-     *
      * @see controlP5.ControlBroadcaster
      */
     public ControlBroadcaster getControlBroadcaster() {
@@ -480,7 +479,7 @@ public class ControlP5 extends ControlP5Base {
 
         if (checkName(theController.getAddress())) {
             /* in case a controller with the same name
-			 * already exists, will be deleted */
+             * already exists, will be deleted */
             remove(theController.getAddress());
         }
 
@@ -550,8 +549,8 @@ public class ControlP5 extends ControlP5Base {
      *
      * @param <T>
      * @param theClass A class that extends
-     *            ControllerInterface, which applies to all
-     *            Controllers and ControllerGroups
+     *                 ControllerInterface, which applies to all
+     *                 Controllers and ControllerGroups
      * @return List<T>
      */
     @SuppressWarnings("unchecked")
@@ -599,7 +598,7 @@ public class ControlP5 extends ControlP5Base {
 
     /**
      * removes a controller by instance.
-     *
+     * <p>
      * TODO Fix this. this only removes the reference to a
      * controller from the controller map but not its
      * children, fatal for controller groups!
@@ -657,9 +656,9 @@ public class ControlP5 extends ControlP5Base {
     }
 
     /**
+     * @return List<ControllerInterface>
      * @exclude
      * @see controlP5.ControlP5#getAll(Class)
-     * @return List<ControllerInterface>
      */
     @ControlP5.Invisible
     public List<ControllerInterface<?>> getList() {
@@ -912,7 +911,6 @@ public class ControlP5 extends ControlP5Base {
 
     /**
      * Checks if controllers are generally moveable
-     *
      */
     public boolean isMoveable() {
         return isMoveable;
@@ -946,8 +944,8 @@ public class ControlP5 extends ControlP5Base {
      * Loads properties from a default properties file and
      * changes values of controllers accordingly.
      *
-     * @see controlP5.ControllerProperties
      * @return
+     * @see controlP5.ControllerProperties
      */
     public boolean loadProperties() {
         return _myProperties.load();
@@ -979,9 +977,9 @@ public class ControlP5 extends ControlP5Base {
     }
 
     /**
-     * @exclude
      * @param theFilePath
      * @return
+     * @exclude
      */
     @ControlP5.Invisible
     public boolean loadLayout(String theFilePath) {
@@ -996,8 +994,8 @@ public class ControlP5 extends ControlP5Base {
     }
 
     /**
-     * @exclude
      * @param theFilePath
+     * @exclude
      */
     public void saveLayout(String theFilePath) {
         getLayout().save(theFilePath);
@@ -1072,9 +1070,9 @@ public class ControlP5 extends ControlP5Base {
      * checks if automatic updates are enabled. By default
      * this is true.
      *
+     * @return
      * @see controlP5.ControlP5#update()
      * @see controlP5.ControlP5#setUpdate(boolean)
-     * @return
      */
     public boolean isUpdate() {
         return isUpdate;
@@ -1084,9 +1082,9 @@ public class ControlP5 extends ControlP5Base {
      * changes the update behavior according to parameter
      * theFlag
      *
+     * @param theFlag
      * @see controlP5.ControlP5#update()
      * @see controlP5.ControlP5#isUpdate()
-     * @param theFlag
      */
     public void setUpdate(boolean theFlag) {
         isUpdate = theFlag;
@@ -1125,7 +1123,6 @@ public class ControlP5 extends ControlP5Base {
     /**
      * disables shortcuts such as alt-h for hiding/showing
      * controllers
-     *
      */
     public void disableShortcuts() {
         isShortcuts = false;

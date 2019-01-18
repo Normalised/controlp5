@@ -21,7 +21,7 @@ public class Point2D {
     }
 
     public Point2D clone() {
-        return new Point2D(x,y);
+        return new Point2D(x, y);
     }
 
     public Point2D add(Point2D other) {
