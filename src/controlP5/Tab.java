@@ -57,7 +57,6 @@ public class Tab extends ControllerGroup<Tab> {
         super(theControlP5, null, theName, 0, 0);
         position = new Point2D();
         absolutePosition = new Point2D();
-        isMoveable = false;
         isEventActive = theControlP5.isTabEventsActive;
         _myHeight = 16;
         _myWidth = _myLabel.getWidth() + padding * 2;
@@ -219,6 +218,12 @@ public class Tab extends ControllerGroup<Tab> {
      */
     @Override
     public Tab setValue(float theValue) {
+        _myValue = theValue;
+        return this;
+    }
+
+    @Override
+    public Tab setValueWithoutNotification(float theValue) {
         _myValue = theValue;
         return this;
     }

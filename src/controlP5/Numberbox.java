@@ -100,13 +100,11 @@ public class Numberbox extends Controller<Numberbox> {
     @ControlP5.Invisible
     public Numberbox updateInternalEvents(PApplet theApplet) {
         if (isActive) {
-            if (!cp5.isAltDown()) {
                 if (_myNumberCount == VERTICAL) {
                     setValue(_myValue + (_myControlWindow.mouseY - _myControlWindow.pmouseY) * _myMultiplier);
                 } else {
                     setValue(_myValue + (_myControlWindow.mouseX - _myControlWindow.pmouseX) * _myMultiplier);
                 }
-            }
         }
         return this;
     }

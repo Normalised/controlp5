@@ -47,6 +47,8 @@ public interface ControllerInterface<T> {
 
     public T setValue(float theValue);
 
+    public T setValueWithoutNotification(float theValue);
+
     public float getValue();
 
     public T setStringValue(String theValue);

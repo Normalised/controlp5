@@ -118,7 +118,6 @@ public class Textarea extends ControllerGroup<Textarea> implements ControlListen
         _myScrollbar.init();
         _myScrollbar.setBroadcast(false);
         _myScrollbar.setSliderMode(Slider.FLEXIBLE);
-        _myScrollbar.isMoveable = false;
         _myScrollbar.isLabelVisible = false;
         _myScrollbar.setParent(this);
         _myScrollbar.addListener(this);

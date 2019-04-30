@@ -407,7 +407,9 @@ public class ScrollableList extends Controller<ScrollableList> implements Contro
         _myDisplayMode = theMode;
         switch (theMode) {
             case (DEFAULT):
-                _myControllerView = new ScrollableListView();
+                ScrollableListView listView = new ScrollableListView();
+                listView.itemRenderer = listView;
+                _myControllerView = listView;
                 break;
             case (IMAGE):
             case (SPRITE):
@@ -418,11 +420,13 @@ public class ScrollableList extends Controller<ScrollableList> implements Contro
         return this;
     }
 
-    static public class ScrollableListView implements ControllerView<ScrollableList> {
+    public interface ListItemRenderer {
+        void drawItem(PGraphics g, Map<String, Object> item, boolean isMouseOver, boolean isMousePressed, int itemWidth, int itemHeight, Label label);
+    }
+
+    static public class ScrollableListView implements ControllerView<ScrollableList>, ListItemRenderer {
 
         public void display(PGraphics g, ScrollableList c) {
-
-            // setHeight( -200 ); /* UP */
 
             g.noStroke();
 
@@ -441,7 +445,6 @@ public class ScrollableList extends Controller<ScrollableList> implements Contro
                 g.popMatrix();
 
                 c.getCaptionLabel().draw(g, 4, c.barHeight / 2);
-
             }
 
             if (c.isOpen()) {
@@ -460,11 +463,7 @@ public class ScrollableList extends Controller<ScrollableList> implements Contro
                 int m1 = c.items.size() > c.itemRange ? (c.itemIndexOffset + c.itemRange) : c.items.size();
                 for (int i = m0; i < m1; i++) {
                     Map<String, Object> item = c.items.get(i);
-                    CColor color = (CColor) item.get("color");
-                    g.fill((b(item.get("state"))) ? color.getActive() : (i == c.itemHover) ? (c.isMousePressed ? color.getActive() : color.getForeground()) : color.getBackground());
-                    g.rect(0, 0, c.getWidth(), c.itemHeight - 1);
-                    c.getValueLabel().set(item.get("text").toString()).draw(g, 4, c.itemHeight / 2);
-                    g.translate(0, c.itemHeight);
+                    itemRenderer.drawItem(g, item, i == c.itemHover, c.isMousePressed, c.getWidth(), c.itemHeight, c.getValueLabel());
                 }
                 g.popMatrix();
 
@@ -484,9 +483,17 @@ public class ScrollableList extends Controller<ScrollableList> implements Contro
                 }
                 g.popMatrix();
             }
-
         }
 
+        public void drawItem(PGraphics g, Map<String, Object> item, boolean isMouseOver, boolean isMousePressed, int itemWidth, int itemHeight, Label label) {
+            CColor color = (CColor) item.get("color");
+            g.fill((b(item.get("state"))) ? color.getActive() : isMouseOver ? (isMousePressed ? color.getActive() : color.getForeground()) : color.getBackground());
+            g.rect(0, 0, itemWidth, itemHeight - 1);
+            label.set(item.get("text").toString()).draw(g, 4, itemHeight / 2);
+            g.translate(0, itemHeight);
+        }
+
+        public ListItemRenderer itemRenderer;
     }
 
     public void keyEvent(KeyEvent theKeyEvent) {

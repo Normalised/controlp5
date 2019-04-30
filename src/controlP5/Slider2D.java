@@ -45,6 +45,8 @@ public class Slider2D extends Controller<Slider2D> {
     public boolean isCrosshairs = true;
 
     private String _myValueLabelSeparator = ",";
+    private int gridX;
+    private int gridY;
 
     /**
      * Convenience constructor to extend Slider2D.
@@ -75,7 +77,6 @@ public class Slider2D extends Controller<Slider2D> {
     @ControlP5.Invisible
     public Slider2D updateInternalEvents(PApplet theApplet) {
         if (isInside()) {
-            if (!cp5.isAltDown()) {
                 float tX = PApplet.constrain(_myControlWindow.mouseX - (_myParent.getAbsolutePosition().x + position.x), 0, getWidth() - cursorWidth);
                 float tY = PApplet.constrain(_myControlWindow.mouseY - (_myParent.getAbsolutePosition().y + position.y), 0, getHeight() - cursorHeight);
                 if (isMousePressed) {
@@ -83,7 +84,6 @@ public class Slider2D extends Controller<Slider2D> {
                     cursorY = tY;
                     updateValue();
                 }
-            }
         }
         return this;
     }
@@ -174,6 +174,12 @@ public class Slider2D extends Controller<Slider2D> {
 
     public float getCursorHeight() {
         return cursorHeight;
+    }
+
+    public Slider2D setGrid(int x, int y) {
+        gridX = x;
+        gridY = y;
+        return this;
     }
 
     public Slider2D disableCrosshair() {
@@ -284,6 +290,21 @@ public class Slider2D extends Controller<Slider2D> {
 
             getCaptionLabel().draw(theGraphics, 0, 0, theController);
             getValueLabel().draw(theGraphics, 0, 0, theController);
+
+            theGraphics.fill(ColorPalette.GRAY);
+            if(gridX > 1) {
+                float dx = getWidth() / gridX;
+                for(int x = 1;x < gridX ; x++) {
+                    theGraphics.rect(x * dx, 0, 1, getHeight());
+                }
+            }
+
+            if(gridY > 1) {
+                float dy = getHeight() / gridY;
+                for(int y = 1;y < gridY ; y++) {
+                    theGraphics.rect(0, y * dy, getWidth(), 1);
+                }
+            }
         }
 
     }

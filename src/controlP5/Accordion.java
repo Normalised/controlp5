@@ -63,7 +63,6 @@ public class Accordion extends ControlGroup<Accordion> {
         theGroup.moveTo(this);
         theGroup.activateEvent(true);
         theGroup.addListener(this);
-        theGroup.setMoveable(false);
         if (theGroup.getBackgroundHeight() < minHeight) {
             theGroup.setBackgroundHeight(minHeight);
         }

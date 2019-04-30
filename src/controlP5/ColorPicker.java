@@ -77,7 +77,6 @@ public class ColorPicker extends ControlGroup<ColorPicker> {
         sliderRed.setBroadcast(false);
         sliderRed.addListener(this);
         sliderRed.moveTo(this);
-        sliderRed.setMoveable(false);
         sliderRed.setColorBackground(0xff660000);
         sliderRed.setColorForeground(0xffaa0000);
         sliderRed.setColorActive(0xffff0000);
@@ -91,7 +90,6 @@ public class ColorPicker extends ControlGroup<ColorPicker> {
         sliderGreen.setBroadcast(false);
         sliderGreen.addListener(this);
         sliderGreen.moveTo(this);
-        sliderGreen.setMoveable(false);
         sliderGreen.setColorBackground(0xff006600);
         sliderGreen.setColorForeground(0xff00aa00);
         sliderGreen.setColorActive(0xff00ff00);
@@ -105,7 +103,6 @@ public class ColorPicker extends ControlGroup<ColorPicker> {
         sliderBlue.setBroadcast(false);
         sliderBlue.addListener(this);
         sliderBlue.moveTo(this);
-        sliderBlue.setMoveable(false);
         sliderBlue.setColorBackground(0xff000066);
         sliderBlue.setColorForeground(0xff0000aa);
         sliderBlue.setColorActive(0xff0000ff);
@@ -120,7 +117,6 @@ public class ColorPicker extends ControlGroup<ColorPicker> {
         sliderAlpha.addListener(this);
 
         sliderAlpha.moveTo(this);
-        sliderAlpha.setMoveable(false);
         sliderAlpha.setColorBackground(0xff666666);
         sliderAlpha.setColorForeground(0xffaaaaaa);
         sliderAlpha.setColorActive(0xffffffff);

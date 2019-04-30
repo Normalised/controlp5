@@ -149,7 +149,6 @@ public class MultiList extends Controller<MultiList> implements MultiListInterfa
         int y = (int) position.y + yy;// (_myDefaultButtonHeight + 1) * _myChildren.size();
         MultiListButton b = new MultiListButton(cp5, theName, theValue, x, y, getWidth(), _myDefaultButtonHeight, this, this);
         b.toUpperCase(isUpperCase);
-        b.isMoveable = false;
         cp5.register(null, "", b);
         b.addListener(this);
         getSubelements().add(b);

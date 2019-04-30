@@ -154,7 +154,6 @@ public class MultiListButton extends Button implements MultiListInterface {
         // location of the list.
         int xx = ((int) position.x + (getWidth() + 1));
         MultiListButton b = new MultiListButton(cp5, theName, theValue, xx, (int) position.y + (getHeight() + 1) + myHeight, (int) getWidth(), (int) getHeight(), this, root);
-        b.isMoveable = false;
         b.toUpperCase(isUpperCase);
         b.hide();
         cp5.register(null, "", b);

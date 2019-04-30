@@ -263,7 +263,6 @@ public class CheckBox extends ControlGroup<CheckBox> {
      */
     public CheckBox addItem(final Toggle theToggle, final float theValue) {
         theToggle.setGroup(this);
-        theToggle.isMoveable = false;
         theToggle.setInternalValue(theValue);
         theToggle.isBroadcast = false;
         _myRadioToggles.add(theToggle);

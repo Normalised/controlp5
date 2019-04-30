@@ -42,7 +42,9 @@ public class ControllerList {
     }
 
     public void add(ControllerInterface<?> theController) {
+
         if (controllers.indexOf(theController) < 0) {
+            System.out.println("Add Controller " + theController.toString());
             controllers.add(theController);
         }
     }
@@ -52,6 +54,7 @@ public class ControllerList {
     }
 
     protected void addDrawable(CDrawable theController) {
+        System.out.println("Add Drawable " + theController.toString());
         if (drawables.indexOf(theController) < 0) {
             drawables.add(theController);
         }

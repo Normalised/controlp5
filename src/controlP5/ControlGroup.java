@@ -74,7 +74,6 @@ public class ControlGroup<T> extends ControllerGroup<T> implements ControlListen
     @ControlP5.Invisible
     public void mousePressed() {
         if (isBarVisible && isCollapse) {
-            if (!cp5.isAltDown()) {
                 isOpen = !isOpen;
                 if (isEventActive) {
                     final ControlEvent myEvent = new ControlEvent(this);
@@ -83,7 +82,6 @@ public class ControlGroup<T> extends ControllerGroup<T> implements ControlListen
                         cl.controlEvent(myEvent);
                     }
                 }
-            }
         }
     }
 

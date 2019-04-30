@@ -42,7 +42,7 @@ public abstract class ControllerGroup<T> implements ControllerInterface<T>, Cont
     protected Point2D position = new Point2D();
     protected Point2D positionBuffer = new Point2D();
     protected Point2D absolutePosition = new Point2D();
-    protected ControllerList controllers;
+    protected final ControllerList controllers;
     protected List<ControlListener> _myControlListener;
     // protected ControlWindow _myControlWindow;
     protected ControlP5 cp5;
@@ -60,7 +60,6 @@ public abstract class ControllerGroup<T> implements ControllerInterface<T>, Cont
     protected boolean isBarVisible = true;
     protected boolean isArrowVisible = true;
     protected Button _myCloseButton;
-    protected boolean isMoveable = true;
     protected Label _myLabel;
     protected Label _myValueLabel;
     protected int _myWidth = 99;
@@ -79,6 +78,9 @@ public abstract class ControllerGroup<T> implements ControllerInterface<T>, Cont
     private boolean mouseover;
     protected final T me;
 
+    {
+        controllers = new ControllerList();
+    }
     /**
      * Convenience constructor to extend ControllerGroup.
      */
@@ -93,7 +95,7 @@ public abstract class ControllerGroup<T> implements ControllerInterface<T>, Cont
         me = (T) this;
         color.set((theParent == null) ? cp5.color : theParent.color);
         _myName = theName;
-        controllers = new ControllerList();
+        //controllers = new ControllerList();
         _myCanvas = new ArrayList<Canvas>();
         _myControlListener = new ArrayList<ControlListener>();
         _myLabel = new Label(cp5, _myName);
@@ -106,7 +108,7 @@ public abstract class ControllerGroup<T> implements ControllerInterface<T>, Cont
     protected ControllerGroup(float theX, float theY) {
         position = new Point2D(theX, theY);
         me = (T) this;
-        controllers = new ControllerList();
+        //controllers = new ControllerList();
         _myCanvas = new ArrayList<Canvas>();
     }
 
@@ -328,32 +330,20 @@ public abstract class ControllerGroup<T> implements ControllerInterface<T>, Cont
         }
         if (isVisible) {
             if ((isMousePressed == cp5.getWindow().mouselock)) {
-                if (isMousePressed && cp5.isAltDown() && isMoveable) {
-                    if (!cp5.isMoveable) {
-                        positionBuffer = positionBuffer.add(cp5.getWindow().getMousePosition().subtract(cp5.getWindow().getPMousePosition()));
-                        if (cp5.isShiftDown()) {
-                            position = positionBuffer.quantised(10);
-                        } else {
-                            position.setTo(positionBuffer);
-                        }
-                        updateAbsolutePosition();
-                    }
-                } else {
-                    if (isInside) {
+                if (isInside) {
+                    setMouseOver(true);
+                }
+                if (inside()) {
+                    if (!isInside) {
+                        isInside = true;
+                        onEnter();
                         setMouseOver(true);
                     }
-                    if (inside()) {
-                        if (!isInside) {
-                            isInside = true;
-                            onEnter();
-                            setMouseOver(true);
-                        }
-                    } else {
-                        if (isInside && !isMousePressed) {
-                            onLeave();
-                            isInside = false;
-                            setMouseOver(false);
-                        }
+                } else {
+                    if (isInside && !isMousePressed) {
+                        onLeave();
+                        isInside = false;
+                        setMouseOver(false);
                     }
                 }
             }
@@ -462,7 +452,9 @@ public abstract class ControllerGroup<T> implements ControllerInterface<T>, Cont
      * Adds a controller to the group, but use Controller.setGroup() instead.
      */
     public T add(ControllerInterface<?> theElement) {
-        controllers.add(theElement);
+        synchronized (controllers) {
+            controllers.add(theElement);
+        }
         return me;
     }
 
@@ -527,7 +519,7 @@ public abstract class ControllerGroup<T> implements ControllerInterface<T>, Cont
         }
         controllers.clear();
         controllers.clearDrawable();
-        controllers = new ControllerList();
+        //controllers = new ControllerList();
         if (this instanceof Tab) {
             cp5.getWindow().removeTab((Tab) this);
         }
@@ -690,18 +682,6 @@ public abstract class ControllerGroup<T> implements ControllerInterface<T>, Cont
         return me;
     }
 
-    /**
-     * set the moveable status of the group, when false, the group can't be moved.
-     */
-    public T setMoveable(boolean theFlag) {
-        isMoveable = theFlag;
-        return me;
-    }
-
-    public boolean isMoveable() {
-        return isMoveable;
-    }
-
     public T setOpen(boolean theFlag) {
         isOpen = theFlag;
         return me;
@@ -785,6 +765,11 @@ public abstract class ControllerGroup<T> implements ControllerInterface<T>, Cont
     }
 
     public T setValue(float theValue) {
+        _myValue = theValue;
+        return me;
+    }
+
+    public T setValueWithoutNotification(float theValue) {
         _myValue = theValue;
         return me;
     }
@@ -938,7 +923,7 @@ public abstract class ControllerGroup<T> implements ControllerInterface<T>, Cont
 
     public String getInfo() {
         return "type:\tControllerGroup" + "\nname:\t" + _myName + "\n" + "label:\t" + _myLabel.getText() + "\n" + "id:\t" + _myId + "\n" + "value:\t" + _myValue + "\n" + "arrayvalue:\t" + CP.arrayToString(_myArrayValue) + "\n" + "position:\t"
-                + position + "\n" + "absolute:\t" + absolutePosition + "\n" + "width:\t" + getWidth() + "\n" + "height:\t" + getHeight() + "\n" + "color:\t" + getColor() + "\n" + "visible:\t" + isVisible + "\n" + "moveable:\t" + isMoveable + "\n";
+                + position + "\n" + "absolute:\t" + absolutePosition + "\n" + "width:\t" + getWidth() + "\n" + "height:\t" + getHeight() + "\n" + "color:\t" + getColor() + "\n" + "visible:\t" + isVisible + "\n";
     }
 
     /**

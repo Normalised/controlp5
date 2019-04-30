@@ -125,7 +125,6 @@ public class ControlP5 extends ControlP5Base {
     private Map<String, ControllerInterface<?>> _myControllerMap;
     protected ControlBroadcaster _myControlBroadcaster;
     protected ControlWindow window;
-    protected boolean isMoveable = false;
 
     /* TODO does not work anymore, deprecate? */
     protected boolean isAutoInitialization = false;
@@ -895,25 +894,6 @@ public class ControlP5 extends ControlP5Base {
     public ControlP5 setBackground(int theColor) {
         controlWindow.setBackground(theColor);
         return this;
-    }
-
-    /**
-     * Enables/disables Controllers to be moved around when
-     * ALT-key is down and mouse is dragged. Other key
-     * events are still available like ALT-h to hide and
-     * show the controllers To disable all key events, use
-     * disableKeys()
-     */
-    public ControlP5 setMoveable(boolean theFlag) {
-        isMoveable = theFlag;
-        return this;
-    }
-
-    /**
-     * Checks if controllers are generally moveable
-     */
-    public boolean isMoveable() {
-        return isMoveable;
     }
 
     /**

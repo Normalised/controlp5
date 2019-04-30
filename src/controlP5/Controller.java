@@ -94,7 +94,6 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     protected Label _myCaptionLabel;
     protected Label _myValueLabel;
     protected boolean isLabelVisible = true;
-    protected boolean isMoveable = true;
     protected boolean isBroadcast = true;
     protected boolean isVisible = true;
     protected boolean isActive = false;
@@ -335,28 +334,6 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
     }
 
     /**
-     * enable or prevent the controller to be moveable. By default a controller is moveable.
-     *
-     * @param theValue boolean
-     * @return Controller
-     */
-    @ControlP5.Layout
-    public T setMoveable(final boolean theValue) {
-        isMoveable = theValue;
-        return me;
-    }
-
-    /**
-     * checks if a controller is moveable.
-     *
-     * @return boolean
-     */
-    @ControlP5.Layout
-    public boolean isMoveable() {
-        return isMoveable;
-    }
-
-    /**
      * show or hide the labels of a controller.
      *
      * @param theValue boolean
@@ -502,18 +479,7 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
         }
 
         if (isVisible && (isMousePressed == _myControlWindow.mouselock)) {
-            if (isMousePressed && cp5.isAltDown() && isMoveable) {
-                if (!cp5.isMoveable) {
-                    positionBuffer.setLocation(
-                            positionBuffer.x + _myControlWindow.mouseX - _myControlWindow.pmouseX,
-                            positionBuffer.y + _myControlWindow.mouseY - _myControlWindow.pmouseY);
-                    if (cp5.isShiftDown()) {
-                        position.setLocation(((int) (positionBuffer.x) / 10) * 10, ((int) (positionBuffer.y) / 10) * 10);
-                    } else {
-                        position.setLocation(positionBuffer.x, positionBuffer.y);
-                    }
-                }
-            } else {
+
                 if (!isLock) {
                     if (isInside) {
                         setMouseOver(true);
@@ -551,7 +517,6 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
                         }
                     }
                 }
-            }
         }
         return me;
     }
@@ -609,7 +574,6 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
         if (theStatus == true) {
             if (isInside) {
                 isMousePressed = true;
-                if (!cp5.isAltDown()) {
                     mousePressed();
                     onPress();
                     cp5.getControlBroadcaster().invokeAction(new CallbackEvent(this, ACTION_PRESS));
@@ -618,13 +582,11 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
                         onDoublePress();
                         callListener(ACTION_DOUBLE_PRESS);
                     }
-                }
                 return true;
             }
         } else {
             if (isMousePressed == true && inside()) {
                 isMousePressed = false;
-                if (!cp5.isAltDown()) {
 
                     mouseReleased();
                     onRelease();
@@ -642,7 +604,6 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
 
                     isDragged = false;
 
-                }
             }
             if (!inside()) {
                 setIsInside(false);
@@ -740,10 +701,17 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
 
         theGraphics.pushMatrix();
         theGraphics.translate(position.x, position.y);
+        if(_myControllerView == null) {
+            System.out.println("Controller View is null");
+            return;
+        }
+        if(theGraphics == null) {
+            System.out.println("Graphics is null");
+        }
+        if(me == null) {
+            System.out.println("Me is null");
+        }
         _myControllerView.display(theGraphics, me);
-        // theGraphics.pushMatrix( );
-        // _myDebugView.display( theGraphics , me );
-        // theGraphics.popMatrix( );
         theGraphics.popMatrix();
 
     }
@@ -1384,10 +1352,20 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
         return me;
     }
 
+    public T setValueWithoutNotification(float theValue) {
+        _myValue = theValue;
+        final ControlEvent myEvent = new ControlEvent(this);
+        for (ControlListener cl : _myControlListener) {
+            cl.controlEvent(myEvent);
+        }
+        isInit = true;
+        return me;
+    }
+
     public T setValueSelf(float theValue) {
         boolean broadcast = isBroadcast();
         setBroadcast(false);
-        _myValue = theValue;
+        setValue(theValue);
         broadcast(FLOAT);
         setBroadcast(broadcast);
         return me;
@@ -2235,7 +2213,7 @@ public abstract class Controller<T> implements ControllerInterface<T>, CDrawable
      */
     public String getInfo() {
         return "[ type:\tController" + "\nname:\t" + _myName + "\n" + "label:\t" + _myCaptionLabel.getText() + "\n" + "id:\t" + _myId + "\n" + "value:\t" + getValue() + "\n" + "arrayvalue:\t" + CP.arrayToString(_myArrayValue) + "\n" + "position:\t"
-                + position + "\n" + "absolute:\t" + absolutePosition + "\n" + "width:\t" + getWidth() + "\n" + "height:\t" + getHeight() + "\n" + "color:\t" + getColor() + "\n" + "visible:\t" + isVisible + "\n" + "moveable:\t" + isMoveable + " ]";
+                + position + "\n" + "absolute:\t" + absolutePosition + "\n" + "width:\t" + getWidth() + "\n" + "height:\t" + getHeight() + "\n" + "color:\t" + getColor() + "\n" + "visible:\t" + isVisible + " ]";
     }
 
     /**

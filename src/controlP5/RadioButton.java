@@ -120,7 +120,6 @@ public class RadioButton extends ControlGroup<RadioButton> {
      */
     public RadioButton addItem(final Toggle theToggle, final float theValue) {
         theToggle.setGroup(this);
-        theToggle.isMoveable = false;
         theToggle.setInternalValue(theValue);
         theToggle.isBroadcast = false;
         _myRadioToggles.add(theToggle);

@@ -62,6 +62,7 @@ public class Slider extends Controller<Slider> {
     protected float _myInternalValue = 0;
     private float valueForShiftScaling = 0f;
     private boolean shiftIsDown = false;
+    private boolean controlIsDown = false;
     private Point2D mousePosForShiftScaling;
     private Point2D mousePosRelative;
 
@@ -103,7 +104,7 @@ public class Slider extends Controller<Slider> {
     public void keyEvent(KeyEvent theEvent) {
         if (isMousePressed && theEvent.isShiftDown() && (theEvent.getAction() == KeyEvent.PRESS) && !shiftIsDown) {
             captureValueForShiftScaling();
-        } else if (theEvent.getAction() == KeyEvent.RELEASE) {
+        } else if (theEvent.getAction() == KeyEvent.RELEASE && !theEvent.isShiftDown()) {
             shiftIsDown = false;
             // When releasing shift but keeping mouse down any subsequent dragging
             // should update the value relative to the position where shift was released
@@ -181,7 +182,7 @@ public class Slider extends Controller<Slider> {
     @ControlP5.Invisible
     public Slider updateInternalEvents(PApplet theApplet) {
         if (isVisible) {
-            if (isMousePressed && !cp5.isAltDown()) {
+            if (isMousePressed) {
                 _myView.updateInternalEvents(theApplet);
             }
         }
@@ -250,6 +251,11 @@ public class Slider extends Controller<Slider> {
         if (isMousePressed && theValue == getValue()) {
             return this;
         }
+        if (isMousePressed && cp5.isShiftDown() && !shiftIsDown) {
+            captureValueForShiftScaling();
+            return this;
+        }
+
         _myInternalValue = theValue;
         _myValue = PApplet.map(theValue, _myMinReal, _myMaxReal, 0, 1);
         snapValue(_myValue);
@@ -258,10 +264,6 @@ public class Slider extends Controller<Slider> {
         _myValuePosition = ((_myValue - _myMin) / _myUnit);
         _myValueLabel.set(adjustValue(getValue()));
 
-        if (isMousePressed && cp5.isShiftDown() && !shiftIsDown) {
-            captureValueForShiftScaling();
-        }
-
         if (triggerId == PRESSED) {
             broadcast(FLOAT);
         }
@@ -269,6 +271,7 @@ public class Slider extends Controller<Slider> {
     }
 
     private void captureValueForShiftScaling() {
+        System.out.println("Capture value for shift scaling");
         valueForShiftScaling = _myInternalValue;
         mousePosForShiftScaling = _myControlWindow.getMousePosition();
         shiftIsDown = true;
@@ -671,8 +674,9 @@ public class Slider extends Controller<Slider> {
                 float f = _myMin + (dx * _myUnit);
                 setValue(_myMinReal + ((_myMaxReal - _myMinReal) * f));
             } else {
+                float scale = cp5.isControlDown() ? 0.01f : 0.1f;
                 float dx = _myControlWindow.mouseX - mousePosForShiftScaling.x;
-                float f = (dx * _myUnit) * 0.1f;
+                float f = (dx * _myUnit) * scale;
                 setValue(valueForShiftScaling + ((_myMaxReal - _myMinReal) * f));
             }
         }
